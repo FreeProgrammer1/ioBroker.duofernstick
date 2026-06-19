@@ -1,6 +1,22 @@
 version: 2
 updates:
   - package-ecosystem: npm
+    directory: "/"
+    schedule:
+      interval: weekly
+    cooldown:
+      default: 7
+    ignore:
+      - dependency-name: "@types/node"
+        update-types:
+          - "version-update:semver-major"
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: weekly
+version: 2
+updates:
+  - package-ecosystem: npm
     directory: /
     schedule:
       interval: weekly
