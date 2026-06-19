@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>DuoFern Stick</title>
+    <link rel="stylesheet" type="text/css" href="../../lib/css/materialize.css">
+    <link rel="stylesheet" type="text/css" href="../../css/adapter.css">
+    <script type="text/javascript" src="../../lib/js/jquery-3.2.1.min.js"></script>
+    <script type="text/javascript" src="../../socket.io/socket.io.js"></script>
+    <script type="text/javascript" src="../../js/translate.js"></script>
+    <script type="text/javascript" src="../../lib/js/materialize.js"></script>
+    <script type="text/javascript" src="../../js/adapter-settings.js"></script>
+    <script type="text/javascript" src="words.js"></script>
+    <style>.m .row{margin-bottom:8px}.hint{font-size:.9rem;color:#666}</style>
+    <script type="text/javascript">
+        function load(settings, onChange) {
+            if (!settings) return;
+            $('.value').each(function () {
+                const $key = $(this);
+                const id = $key.attr('id');
+                if ($key.attr('type') === 'checkbox') $key.prop('checked', settings[id]).on('change', () => onChange());
+                else $key.val(settings[id]).on('change keyup', () => onChange());
+            });
+            onChange(false);
+            M.updateTextFields();
+        }
+        function save(callback) {
+            const obj = {};
+            $('.value').each(function () {
+                const $this = $(this);
+                obj[$this.attr('id')] = $this.attr('type') === 'checkbox' ? $this.prop('checked') : $this.val();
+            });
+            callback(obj);
+        }
+    </script>
+</head>
+<body>
+<div class="m adapter-container">
+    <div class="row">
+        <div class="col s12">
+            <h5 class="translate">DuoFern Stick settings</h5>
+            <p class="hint translate">Configure the local Rademacher DuoFern USB stick. Standard baud rate is 115200.</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="input-field col s12 m8">
+            <input class="value" id="serialPort" type="text">
+            <label for="serialPort" class="translate">Serial port</label>
+        </div>
+        <div class="input-field col s12 m4">
+            <input class="value" id="baudRate" type="number">
+            <label for="baudRate" class="translate">Baud rate</label>
+        </div>
+    </div>
+    <div class="row">
+        <div class="input-field col s12 m4">
+            <input class="value" id="dongleSerial" type="text">
+            <label for="dongleSerial" class="translate">Dongle serial</label>
+            <span class="helper-text translate">Must usually start with 6F.</span>
+        </div>
+        <div class="col s12 m8">
+            <p><label><input class="value" id="autoCreateDevices" type="checkbox"><span class="translate">Automatically create devices</span></label></p>
+            <p><label><input class="value" id="statusOnStart" type="checkbox"><span class="translate">Request status on adapter start</span></label></p>
+            <p><label><input class="value" id="preserveUnknownValues" type="checkbox"><span class="translate">Preserve values when telegrams are incomplete</span></label></p>
+            <p><label><input class="value" id="createOnlySupportedStates" type="checkbox"><span class="translate">Create only supported/observed states per device</span></label></p>
+            <p><label><input class="value" id="debugRaw" type="checkbox"><span class="translate">Log raw telegrams</span></label></p>
+        </div>
+    </div>
+</div>
+</body>
+</html>

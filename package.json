@@ -1,0 +1,34 @@
+{
+  "name": "iobroker.duofernstick",
+  "version": "0.1.21",
+  "description": "ioBroker adapter for Rademacher DuoFern USB Stick",
+  "main": "main.js",
+  "scripts": {
+    "test": "node test/state-update.test.js",
+    "check": "node --check main.js && node --check lib/duofern-parser.js && node --check lib/state-manager.js && node --check lib/device-types.js && node --check lib/commands.js"
+  },
+  "keywords": [
+    "ioBroker",
+    "DuoFern",
+    "Rademacher",
+    "HomePilot",
+    "RolloTron"
+  ],
+  "author": "Geht Euch",
+  "license": "MIT",
+  "dependencies": {
+    "@iobroker/adapter-core": "^3.1.4",
+    "serialport": "^12.0.0"
+  },
+  "devDependencies": {},
+  "engines": {
+    "node": ">=18"
+  },
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "bugs": {
+    "url": ""
+  }
+}

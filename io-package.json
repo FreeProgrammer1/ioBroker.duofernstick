@@ -1,0 +1,171 @@
+{
+  "common": {
+    "name": "duofernstick",
+    "version": "0.1.21",
+    "titleLang": {
+      "en": "DuoFern Stick",
+      "de": "DuoFern Stick"
+    },
+    "desc": {
+      "en": "Adapter for Rademacher DuoFern USB stick with persistent state handling.",
+      "de": "Adapter für den Rademacher DuoFern USB-Stick mit persistenter Statusverarbeitung."
+    },
+    "authors": [
+      ""
+    ],
+    "keywords": [
+      "duofern",
+      "rademacher",
+      "rollotron",
+      "shutter",
+      "rohrmotor"
+    ],
+    "license": "MIT",
+    "platform": "Javascript/Node.js",
+    "mode": "daemon",
+    "enabled": false,
+    "icon": "duofernstick.svg",
+    "extIcon": "https://raw.githubusercontent.com/ioBroker/ioBroker.admin/master/admin/img/no-image.svg",
+    "readme": "https://github.com/",
+    "loglevel": "info",
+    "type": "hardware",
+    "compact": true,
+    "connectionType": "local",
+    "dataSource": "push",
+    "materialize": true,
+    "adminUI": {
+      "config": "materialize"
+    },
+    "dependencies": [
+      {
+        "js-controller": ">=5.0.0"
+      }
+    ],
+    "globalDependencies": [
+      {
+        "admin": ">=6.0.0"
+      }
+    ],
+    "restartAdapters": []
+  },
+  "native": {
+    "serialPort": "/dev/serial/by-id/usb-Rademacher_DuoFern_USB-Stick-if00-port0",
+    "baudRate": 115200,
+    "dongleSerial": "6F0000",
+    "autoCreateDevices": true,
+    "statusOnStart": true,
+    "preserveUnknownValues": true,
+    "createOnlySupportedStates": true,
+    "debugRaw": false
+  },
+  "objects": [],
+  "instanceObjects": [
+    {
+      "_id": "info",
+      "type": "channel",
+      "common": {
+        "name": "Information"
+      },
+      "native": {}
+    },
+    {
+      "_id": "info.connection",
+      "type": "state",
+      "common": {
+        "name": "Connected",
+        "type": "boolean",
+        "role": "indicator.connected",
+        "read": true,
+        "write": false,
+        "def": false
+      },
+      "native": {}
+    },
+    {
+      "_id": "info.lastRawTelegram",
+      "type": "state",
+      "common": {
+        "name": "Last raw DuoFern telegram",
+        "type": "string",
+        "role": "text",
+        "read": true,
+        "write": false,
+        "def": ""
+      },
+      "native": {}
+    },
+    {
+      "_id": "info.lastError",
+      "type": "state",
+      "common": {
+        "name": "Last error",
+        "type": "string",
+        "role": "text",
+        "read": true,
+        "write": false,
+        "def": ""
+      },
+      "native": {}
+    },
+    {
+      "_id": "control",
+      "type": "channel",
+      "common": {
+        "name": "Adapter control"
+      },
+      "native": {}
+    },
+    {
+      "_id": "control.pair",
+      "type": "state",
+      "common": {
+        "name": "Start pairing mode",
+        "type": "boolean",
+        "role": "button",
+        "read": false,
+        "write": true,
+        "def": false
+      },
+      "native": {}
+    },
+    {
+      "_id": "control.unpair",
+      "type": "state",
+      "common": {
+        "name": "Start unpairing mode",
+        "type": "boolean",
+        "role": "button",
+        "read": false,
+        "write": true,
+        "def": false
+      },
+      "native": {}
+    },
+    {
+      "_id": "control.statusBroadcast",
+      "type": "state",
+      "common": {
+        "name": "Request status from all devices",
+        "type": "boolean",
+        "role": "button",
+        "read": false,
+        "write": true,
+        "def": false
+      },
+      "native": {}
+    },
+    {
+      "_id": "control.raw",
+      "type": "state",
+      "common": {
+        "name": "Send raw telegram as hex",
+        "type": "string",
+        "role": "text",
+        "read": false,
+        "write": true,
+        "def": ""
+      },
+      "native": {}
+    }
+  ]
+}
