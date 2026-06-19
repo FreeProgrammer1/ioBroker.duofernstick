@@ -254,6 +254,8 @@ For diagnostics, the following information is useful:
 - Control states for pairing, unpairing, status broadcast and raw telegrams
 - Control states for shutter, actuator, dimmer, sensor and thermostat classes
 
+[Older changelogs can be found there](CHANGELOG_OLD.md)
+
 ## License
 
 MIT
