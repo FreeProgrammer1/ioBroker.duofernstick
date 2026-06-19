@@ -25,7 +25,7 @@
   },
   "devDependencies": {
     "@iobroker/testing": "^5.2.2",
-    "@types/node": "^22.15.0"
+    "@types/node": "^26.0.0"
   },
   "engines": {
     "node": ">=22"
