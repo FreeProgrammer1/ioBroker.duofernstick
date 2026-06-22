@@ -32,6 +32,9 @@
       "FreeProgrammer1"
     ],
     "keywords": [
+      "iobroker-adapter",
+      "iobroker",
+      "ioBroker",
       "duofern",
       "rademacher",
       "rollotron",
@@ -69,7 +72,7 @@
     "licenseInformation": {
       "type": "free",
       "license": "MIT",
-      "link": "https://github.com/FreeProgrammer1/ioBroker.duofernstick/blob/main/LICENSE"
+      "link": "https://opensource.org/licenses/MIT"
     },
     "news": {
       "0.1.21": {
