@@ -1,0 +1,100 @@
+{
+  "type": "panel",
+  "i18n": true,
+  "items": {
+    "port": {
+      "type": "text",
+      "label": "serialPort",
+      "placeholder": "/dev/serial/by-id/usb-Rademacher_DuoFern_USB-Stick... or COM5",
+      "help": "serialPortHelp"
+    },
+    "baudRate": {
+      "type": "number",
+      "label": "baudRate",
+      "help": "baudRateHelp",
+      "default": 115200
+    },
+    "dongleSerial": {
+      "type": "text",
+      "label": "dongleSerial",
+      "help": "dongleSerialHelp",
+      "placeholder": "6F1A6F"
+    },
+    "deviceCodes": {
+      "type": "text",
+      "label": "deviceCodes",
+      "help": "deviceCodesHelp",
+      "placeholder": "406B2D, 4090AE, 43ABCD01"
+    },
+    "autoCreate": {
+      "type": "checkbox",
+      "label": "autoCreate",
+      "help": "autoCreateHelp"
+    },
+    "initOnStart": {
+      "type": "checkbox",
+      "label": "initOnStart",
+      "help": "initOnStartHelp"
+    },
+    "statusOnStart": {
+      "type": "checkbox",
+      "label": "statusOnStart",
+      "help": "statusOnStartHelp"
+    },
+    "statusAfterCommand": {
+      "type": "checkbox",
+      "label": "statusAfterCommand",
+      "help": "statusAfterCommandHelp"
+    },
+    "periodicStatusPoll": {
+      "type": "checkbox",
+      "label": "periodicStatusPoll",
+      "help": "periodicStatusPollHelp"
+    },
+    "periodicStatusPollMs": {
+      "type": "number",
+      "label": "periodicStatusPollMs",
+      "help": "periodicStatusPollMsHelp",
+      "default": 60000
+    },
+    "externalActivityPollAll": {
+      "type": "checkbox",
+      "label": "externalActivityPollAll",
+      "help": "externalActivityPollAllHelp"
+    },
+    "ackIncoming": {
+      "type": "checkbox",
+      "label": "ackIncoming",
+      "help": "ackIncomingHelp"
+    },
+    "debugRaw": {
+      "type": "checkbox",
+      "label": "debugRaw",
+      "help": "debugRawHelp"
+    },
+    "flushPartialMs": {
+      "type": "number",
+      "label": "flushPartialMs",
+      "help": "flushPartialMsHelp",
+      "default": 500
+    },
+    "readAnswerTimeoutMs": {
+      "type": "number",
+      "label": "readAnswerTimeoutMs",
+      "help": "readAnswerTimeoutMsHelp",
+      "default": 1000
+    },
+    "commandTimeoutMs": {
+      "type": "number",
+      "label": "commandTimeoutMs",
+      "help": "commandTimeoutMsHelp",
+      "default": 5000
+    },
+    "reconnectIntervalMs": {
+      "type": "number",
+      "label": "reconnectIntervalMs",
+      "help": "reconnectIntervalMsHelp",
+      "default": 10000
+    }
+  }
+}
