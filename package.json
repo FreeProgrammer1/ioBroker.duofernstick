@@ -5,7 +5,8 @@
   "main": "main.js",
   "scripts": {
     "test": "node test/state-update.test.js",
-    "check": "node --check main.js && node --check lib/duofern-parser.js && node --check lib/state-manager.js && node --check lib/device-types.js && node --check lib/commands.js && node --check admin/words.js"
+    "check": "node --check main.js && node --check lib/duofern-parser.js && node --check lib/state-manager.js && node --check lib/device-types.js && node --check lib/commands.js && node --check admin/words.js",
+    "lint": "node -e \"console.log('No lint rules configured yet.')\""
   },
   "keywords": [
     "ioBroker",
