@@ -1,7 +1,7 @@
 {
   "common": {
     "name": "duofernstick",
-    "version": "0.1.27",
+    "version": "0.1.28",
     "titleLang": {
       "en": "DuoFern Stick",
       "de": "DuoFern Stick",
@@ -161,6 +161,19 @@
         "pl": "Dodano tłumaczenia jsonConfig, usunięto starą stronę admin i zastąpiono bezpośrednie timery timerami adaptera dla zgodności z kontrolerem ioBroker.",
         "uk": "Додано переклади jsonConfig, видалено застарілу сторінку admin і замінено прямі таймери таймерами адаптера для відповідності перевірці ioBroker.",
         "zh-cn": "添加 jsonConfig 翻译，移除旧版管理页面，并将直接定时器替换为适配器定时器，以符合 ioBroker 检查要求。"
+      },
+      "0.1.28": {
+        "en": "Workflow adjusted to run CI checks on Node.js 22 to avoid a npm runner issue while keeping the working DuoFern runtime.",
+        "de": "Workflow angepasst: CI-Prüfungen laufen auf Node.js 22, um ein npm-Runner-Problem zu umgehen; die funktionierende DuoFern-Runtime bleibt unverändert.",
+        "ru": "Рабочий процесс настроен: проверки CI выполняются на Node.js 22 для обхода проблемы npm runner; рабочая среда DuoFern не изменена.",
+        "pt": "Fluxo de trabalho ajustado: as verificações de CI executam em Node.js 22 para contornar um problema do npm runner; a runtime DuoFern funcional permanece inalterada.",
+        "nl": "Workflow aangepast: CI-controles draaien op Node.js 22 om een npm-runnerprobleem te omzeilen; de werkende DuoFern-runtime blijft ongewijzigd.",
+        "fr": "Workflow ajusté : les contrôles CI s’exécutent avec Node.js 22 afin de contourner un problème du runner npm ; le runtime DuoFern fonctionnel reste inchangé.",
+        "it": "Workflow aggiornato: i controlli CI vengono eseguiti con Node.js 22 per aggirare un problema del runner npm; il runtime DuoFern funzionante resta invariato.",
+        "es": "Flujo de trabajo ajustado: las comprobaciones CI se ejecutan con Node.js 22 para evitar un problema del runner npm; la runtime DuoFern funcional no cambia.",
+        "pl": "Dostosowano workflow: kontrole CI działają na Node.js 22, aby obejść problem runnera npm; działające środowisko DuoFern pozostaje bez zmian.",
+        "uk": "Робочий процес змінено: перевірки CI виконуються на Node.js 22, щоб обійти проблему npm runner; робоче середовище DuoFern не змінено.",
+        "zh-cn": "已调整工作流：CI 检查使用 Node.js 22 运行，以绕过 npm runner 问题；可工作的 DuoFern 运行逻辑保持不变。"
       }
     }
   },

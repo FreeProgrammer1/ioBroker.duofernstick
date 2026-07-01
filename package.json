@@ -1,6 +1,6 @@
 {
   "name": "iobroker.duofernstick",
-  "version": "0.1.27",
+  "version": "0.1.28",
   "description": "ioBroker adapter for Rademacher DuoFern USB Stick",
   "main": "main.js",
   "scripts": {
@@ -50,5 +50,6 @@
     "io-package.json",
     "README.md",
     "LICENSE"
-  ]
+  ],
+  "packageManager": "npm@10.9.4"
 }
