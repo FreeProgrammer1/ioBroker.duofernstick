@@ -21,10 +21,10 @@ jobs:
     if: contains(github.event.head_commit.message, '[skip ci]') == false
     runs-on: ubuntu-latest
     steps:
-      - uses: ioBroker/testing-action-check@v1
+      - uses: ioBroker/testing-action-check@v2
         with:
-          node-version: '22.x'  # Geändert von 24.x auf 22.x (stabile LTS)
-          install-command: 'npm ci'  # Geändert zu npm ci für stabilere CI-Builds
+          node-version: '22'        # Erzwingt Node 22 LTS
+          install-command: 'npm ci' # Überschreibt den fehlerhaften npm-Befehl
           lint: true
 
   adapter-tests:
@@ -34,14 +34,14 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node-version: [20.x, 22.x]  # 24.x entfernt, 20.x und 22.x sind die stabilen LTS-Versionen
+        node-version: ['20', '22']  # Node 24 hier entfernt
         os: [ubuntu-latest, windows-latest, macos-latest]
     steps:
-      - uses: ioBroker/testing-action-adapter@v1
+      - uses: ioBroker/testing-action-adapter@v2
         with:
           node-version: ${{ matrix.node-version }}
           os: ${{ matrix.os }}
-          install-command: 'npm ci'  # Auch hier npm ci nutzen
+          install-command: 'npm ci'
 
   deploy:
     needs: [check-and-lint, adapter-tests]
@@ -54,7 +54,7 @@ jobs:
       id-token: write
       contents: write
     steps:
-      - uses: ioBroker/testing-action-deploy@v1
+      - uses: ioBroker/testing-action-deploy@v2
         with:
-          node-version: '22.x'  # Geändert von 24.x auf 22.x
+          node-version: '22'
           github-token: ${{ secrets.GITHUB_TOKEN }}
