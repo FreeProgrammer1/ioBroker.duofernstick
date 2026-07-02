@@ -23,8 +23,8 @@ jobs:
     steps:
       - uses: ioBroker/testing-action-check@v1
         with:
-          node-version: '24.x'
-          install-command: 'npm install --no-audit --no-fund'
+          node-version: '22.x'  # Geändert von 24.x auf 22.x (stabile LTS)
+          install-command: 'npm ci'  # Geändert zu npm ci für stabilere CI-Builds
           lint: true
 
   adapter-tests:
@@ -34,14 +34,14 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node-version: [22.x, 24.x]
+        node-version: [20.x, 22.x]  # 24.x entfernt, 20.x und 22.x sind die stabilen LTS-Versionen
         os: [ubuntu-latest, windows-latest, macos-latest]
     steps:
       - uses: ioBroker/testing-action-adapter@v1
         with:
           node-version: ${{ matrix.node-version }}
           os: ${{ matrix.os }}
-          install-command: 'npm install --no-audit --no-fund'
+          install-command: 'npm ci'  # Auch hier npm ci nutzen
 
   deploy:
     needs: [check-and-lint, adapter-tests]
@@ -56,5 +56,5 @@ jobs:
     steps:
       - uses: ioBroker/testing-action-deploy@v1
         with:
-          node-version: '24.x'
+          node-version: '22.x'  # Geändert von 24.x auf 22.x
           github-token: ${{ secrets.GITHUB_TOKEN }}
