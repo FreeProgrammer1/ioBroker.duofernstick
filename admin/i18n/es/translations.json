@@ -25,8 +25,7 @@
 "ackIncomingHelp": "Enviar telegramas de confirmación (ACK) al adaptador DuoFern tras recibir telegramas.",
 "debugRaw": "Registrar telegramas en bruto",
 "debugRawHelp": "Escribir telegramas DuoFern en bruto (RX/TX) en el registro de depuración.",
-"flushPartialMs": "Tiempo de espera del búfer parcial"
-} en ms",
+"flushPartialMs": "Tiempo de espera del búfer parcial en ms",
 "flushPartialMsHelp": "Tiempo antes de descartar los búferes de recepción serie incompletos.",
 "readAnswerTimeoutMs": "Tiempo de espera de respuesta de lectura en ms",
 "readAnswerTimeoutMsHelp": "Tiempo de espera para recibir respuestas durante la inicialización y la ejecución de comandos.",
