@@ -5,96 +5,110 @@
     "port": {
       "type": "text",
       "label": "serialPort",
-      "placeholder": "/dev/serial/by-id/usb-Rademacher_DuoFern_USB-Stick... or COM5",
-      "help": "serialPortHelp"
+      "help": "serialPortHelp",
+      "xs": 12
     },
     "baudRate": {
       "type": "number",
       "label": "baudRate",
       "help": "baudRateHelp",
-      "default": 115200
+      "default": 115200,
+      "xs": 12
     },
     "dongleSerial": {
       "type": "text",
       "label": "dongleSerial",
       "help": "dongleSerialHelp",
-      "placeholder": "6F1A6F"
+      "xs": 12
     },
     "deviceCodes": {
       "type": "text",
       "label": "deviceCodes",
       "help": "deviceCodesHelp",
-      "placeholder": "406B2D, 4090AE, 43ABCD01"
+      "xs": 12
     },
     "autoCreate": {
       "type": "checkbox",
       "label": "autoCreate",
-      "help": "autoCreateHelp"
+      "help": "autoCreateHelp",
+      "xs": 12
     },
     "initOnStart": {
       "type": "checkbox",
       "label": "initOnStart",
-      "help": "initOnStartHelp"
+      "help": "initOnStartHelp",
+      "xs": 12
     },
     "statusOnStart": {
       "type": "checkbox",
       "label": "statusOnStart",
-      "help": "statusOnStartHelp"
+      "help": "statusOnStartHelp",
+      "xs": 12
     },
     "statusAfterCommand": {
       "type": "checkbox",
       "label": "statusAfterCommand",
-      "help": "statusAfterCommandHelp"
+      "help": "statusAfterCommandHelp",
+      "xs": 12
     },
     "periodicStatusPoll": {
       "type": "checkbox",
       "label": "periodicStatusPoll",
-      "help": "periodicStatusPollHelp"
+      "help": "periodicStatusPollHelp",
+      "xs": 12
     },
     "periodicStatusPollMs": {
       "type": "number",
       "label": "periodicStatusPollMs",
       "help": "periodicStatusPollMsHelp",
-      "default": 60000
+      "default": 60000,
+      "xs": 12
     },
     "externalActivityPollAll": {
       "type": "checkbox",
       "label": "externalActivityPollAll",
-      "help": "externalActivityPollAllHelp"
+      "help": "externalActivityPollAllHelp",
+      "xs": 12
     },
     "ackIncoming": {
       "type": "checkbox",
       "label": "ackIncoming",
-      "help": "ackIncomingHelp"
+      "help": "ackIncomingHelp",
+      "xs": 12
     },
     "debugRaw": {
       "type": "checkbox",
       "label": "debugRaw",
-      "help": "debugRawHelp"
+      "help": "debugRawHelp",
+      "xs": 12
     },
     "flushPartialMs": {
       "type": "number",
       "label": "flushPartialMs",
       "help": "flushPartialMsHelp",
-      "default": 500
+      "default": 500,
+      "xs": 12
     },
     "readAnswerTimeoutMs": {
       "type": "number",
       "label": "readAnswerTimeoutMs",
       "help": "readAnswerTimeoutMsHelp",
-      "default": 1000
+      "default": 1000,
+      "xs": 12
     },
     "commandTimeoutMs": {
       "type": "number",
       "label": "commandTimeoutMs",
       "help": "commandTimeoutMsHelp",
-      "default": 5000
+      "default": 5000,
+      "xs": 12
     },
     "reconnectIntervalMs": {
       "type": "number",
       "label": "reconnectIntervalMs",
       "help": "reconnectIntervalMsHelp",
-      "default": 10000
+      "default": 10000,
+      "xs": 12
     }
   }
 }
