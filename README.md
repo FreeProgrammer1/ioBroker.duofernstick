@@ -243,11 +243,6 @@ For diagnostics, the following information is useful:
 
 ## Changelog
 
-### 0.1.28
-
-- Adjusted GitHub Actions CI to run check and adapter tests on Node.js 22 as a workaround for a npm runner issue on Node.js 24.
-- Kept the restored and working DuoFern runtime unchanged.
-
 
 ### 0.1.27
 
