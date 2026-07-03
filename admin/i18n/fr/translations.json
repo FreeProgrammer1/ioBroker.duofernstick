@@ -25,8 +25,7 @@
 "ackIncomingHelp": "Envoyer des télégrammes d'accusé de réception (ACK) à la clé DuoFern après réception de télégrammes.",
 "debugRaw": "Journaliser les télégrammes bruts",
 "debugRawHelp": "Écrire les télégrammes DuoFern bruts (RX/TX) dans le journal de débogage.",
-"flushPartialMs": "Délai d'attente du tampon partiel"
-} en ms",
+"flushPartialMs": "Délai d'attente du tampon partiel en ms",
 "flushPartialMsHelp": "Délai avant l'abandon des tampons de réception série incomplets.",
 "readAnswerTimeoutMs": "Délai d'attente de réponse (lecture) en ms",
 "readAnswerTimeoutMsHelp": "Délai d'attente des réponses lors de l'initialisation et de l'exécution des commandes.",
