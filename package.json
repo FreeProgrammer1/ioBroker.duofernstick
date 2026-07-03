@@ -50,6 +50,5 @@
     "io-package.json",
     "README.md",
     "LICENSE"
-  ],
-  "packageManager": "npm@10.9.4"
+  ]
 }
