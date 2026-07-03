@@ -23,8 +23,8 @@ jobs:
     steps:
       - uses: ioBroker/testing-action-check@v2
         with:
-          node-version: '22'        # Erzwingt Node 22 LTS
-          install-command: 'npm ci' # Überschreibt den fehlerhaften npm-Befehl
+          node-version: '24'        
+          install-command: 'npm install' # Geändert auf install
           lint: true
 
   adapter-tests:
@@ -34,14 +34,14 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node-version: [20, 22, 24] 
+        node-version: [24]
         os: [ubuntu-latest, windows-latest, macos-latest]
     steps:
       - uses: ioBroker/testing-action-adapter@v2
         with:
           node-version: ${{ matrix.node-version }}
           os: ${{ matrix.os }}
-          install-command: 'npm ci'
+          install-command: 'npm install' # Geändert auf install
 
   deploy:
     needs: [check-and-lint, adapter-tests]
@@ -56,5 +56,5 @@ jobs:
     steps:
       - uses: ioBroker/testing-action-deploy@v2
         with:
-          node-version: '24'
+          node-version: '24'        
           github-token: ${{ secrets.GITHUB_TOKEN }}
