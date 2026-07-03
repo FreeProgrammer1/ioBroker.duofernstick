@@ -243,6 +243,9 @@ For diagnostics, the following information is useful:
 
 ## Changelog
 
+### 0.1.28
+- Fix jsonConfig layout, node.js workflows and translations
+
 
 ### 0.1.27
 
@@ -254,24 +257,6 @@ For diagnostics, the following information is useful:
 
 - Restored the proven DuoFern runtime logic and kept compatibility with the current GitHub/ioBroker package structure.
 - Keeps support for the previous `port` configuration and the newer `serialPort` alias.
-
-
-### 0.1.23
-
-- Fixed send queue delay helper.
-- Normalized accidental double slash serial paths such as `//dev/...`.
-
-
-### 0.1.21
-
-- Extended device and capability catalogue
-- Automatic device creation below `devices.*`
-- Admin configuration for serial port, baud rate, dongle serial and debug options
-- Partial update handling for incoming telegrams
-- Protection against overwriting missing values
-- Protection against unintended reset of `runningTime` to `0`
-- Control states for pairing, unpairing, status broadcast and raw telegrams
-- Control states for shutter, actuator, dimmer, sensor and thermostat classes
 
 Older changelog entries are kept in [CHANGELOG_OLD.md](CHANGELOG_OLD.md).
 
