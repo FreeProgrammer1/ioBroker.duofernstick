@@ -1,7 +1,7 @@
 {
   "common": {
     "name": "duofernstick",
-    "version": "0.1.28",
+    "version": "0.1.29",
     "titleLang": {
       "en": "DuoFern Stick",
       "de": "DuoFern Stick",
@@ -18,15 +18,15 @@
     "desc": {
       "en": "Adapter for Rademacher DuoFern USB stick with persistent state handling.",
       "de": "Adapter für den Rademacher DuoFern USB-Stick mit persistenter Statusverarbeitung.",
-      "ru": "Adapter for Rademacher DuoFern USB stick with persistent state handling.",
-      "pt": "Adapter for Rademacher DuoFern USB stick with persistent state handling.",
-      "nl": "Adapter for Rademacher DuoFern USB stick with persistent state handling.",
-      "fr": "Adapter for Rademacher DuoFern USB stick with persistent state handling.",
-      "it": "Adapter for Rademacher DuoFern USB stick with persistent state handling.",
-      "es": "Adapter for Rademacher DuoFern USB stick with persistent state handling.",
-      "pl": "Adapter for Rademacher DuoFern USB stick with persistent state handling.",
-      "uk": "Adapter for Rademacher DuoFern USB stick with persistent state handling.",
-      "zh-cn": "Adapter for Rademacher DuoFern USB stick with persistent state handling."
+      "ru": "Адаптер для USB-стика Rademacher DuoFern с постоянной обработкой состояния.",
+      "pt": "Adaptador para o stick USB Rademacher DuoFern com tratamento persistente de estados.",
+      "nl": "Adapter voor de Rademacher DuoFern USB-stick met permanente statusverwerking.",
+      "fr": "Adaptateur pour la clé USB Rademacher DuoFern avec gestion persistante des états.",
+      "it": "Adapter per la chiavetta USB Rademacher DuoFern con gestione persistente degli stati.",
+      "es": "Adaptador para el USB Rademacher DuoFern con gestión persistente de estados.",
+      "pl": "Adapter do pendrive USB Rademacher DuoFern z trwałą obsługą stanów.",
+      "uk": "Адаптер для USB-стика Rademacher DuoFern із постійною обробкою станів.",
+      "zh-cn": "用于 Rademacher DuoFern USB 棒的适配器，支持持久状态处理。"
     },
     "authors": [
       "FreeProgrammer1"
@@ -71,6 +71,19 @@
       "link": "https://opensource.org/license/mit"
     },
     "news": {
+      "0.1.29": {
+        "en": "Fixes responsive jsonConfig sizes, admin translations and CI metadata for the repository checker.",
+        "de": "Korrigiert responsive jsonConfig-Größen, Admin-Übersetzungen und CI-Metadaten für den Repository-Checker.",
+        "ru": "Исправлены адаптивные размеры jsonConfig, переводы админки и метаданные CI для проверки репозитория.",
+        "pt": "Corrige tamanhos responsivos do jsonConfig, traduções da administração e metadados de CI para o verificador do repositório.",
+        "nl": "Corrigeert responsieve jsonConfig-formaten, adminvertalingen en CI-metadata voor de repositorychecker.",
+        "fr": "Corrige les tailles responsives de jsonConfig, les traductions d’administration et les métadonnées CI pour le vérificateur du dépôt.",
+        "it": "Corregge le dimensioni responsive di jsonConfig, le traduzioni admin e i metadati CI per il controllo del repository.",
+        "es": "Corrige los tamaños responsivos de jsonConfig, las traducciones de administración y los metadatos de CI para el verificador del repositorio.",
+        "pl": "Poprawia responsywne rozmiary jsonConfig, tłumaczenia panelu administracyjnego i metadane CI dla sprawdzania repozytorium.",
+        "uk": "Виправлено адаптивні розміри jsonConfig, переклади адмінпанелі та метадані CI для перевірки репозиторію.",
+        "zh-cn": "修复 jsonConfig 响应式尺寸、管理界面翻译以及仓库检查器所需的 CI 元数据。"
+      },
       "0.1.26": {
         "en": "Restore the proven DuoFern runtime and keep compatibility with the current GitHub adapter structure.",
         "de": "Bewährte DuoFern-Laufzeitlogik wiederhergestellt und mit der aktuellen GitHub-Adapterstruktur kompatibel gemacht.",

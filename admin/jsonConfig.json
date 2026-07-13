@@ -6,109 +6,177 @@
       "type": "text",
       "label": "serialPort",
       "help": "serialPortHelp",
-      "xs": 12
+      "xs": 12,
+      "sm": 12,
+      "md": 6,
+      "lg": 6,
+      "xl": 4
     },
     "baudRate": {
       "type": "number",
       "label": "baudRate",
       "help": "baudRateHelp",
       "default": 115200,
-      "xs": 12
+      "xs": 12,
+      "sm": 12,
+      "md": 6,
+      "lg": 4,
+      "xl": 3
     },
     "dongleSerial": {
       "type": "text",
       "label": "dongleSerial",
       "help": "dongleSerialHelp",
-      "xs": 12
+      "xs": 12,
+      "sm": 12,
+      "md": 6,
+      "lg": 6,
+      "xl": 4
     },
     "deviceCodes": {
       "type": "text",
       "label": "deviceCodes",
       "help": "deviceCodesHelp",
-      "xs": 12
+      "xs": 12,
+      "sm": 12,
+      "md": 6,
+      "lg": 6,
+      "xl": 4
     },
     "autoCreate": {
       "type": "checkbox",
       "label": "autoCreate",
       "help": "autoCreateHelp",
-      "xs": 12
+      "xs": 12,
+      "sm": 12,
+      "md": 6,
+      "lg": 4,
+      "xl": 4
     },
     "initOnStart": {
       "type": "checkbox",
       "label": "initOnStart",
       "help": "initOnStartHelp",
-      "xs": 12
+      "xs": 12,
+      "sm": 12,
+      "md": 6,
+      "lg": 4,
+      "xl": 4
     },
     "statusOnStart": {
       "type": "checkbox",
       "label": "statusOnStart",
       "help": "statusOnStartHelp",
-      "xs": 12
+      "xs": 12,
+      "sm": 12,
+      "md": 6,
+      "lg": 4,
+      "xl": 4
     },
     "statusAfterCommand": {
       "type": "checkbox",
       "label": "statusAfterCommand",
       "help": "statusAfterCommandHelp",
-      "xs": 12
+      "xs": 12,
+      "sm": 12,
+      "md": 6,
+      "lg": 4,
+      "xl": 4
     },
     "periodicStatusPoll": {
       "type": "checkbox",
       "label": "periodicStatusPoll",
       "help": "periodicStatusPollHelp",
-      "xs": 12
+      "xs": 12,
+      "sm": 12,
+      "md": 6,
+      "lg": 4,
+      "xl": 4
     },
     "periodicStatusPollMs": {
       "type": "number",
       "label": "periodicStatusPollMs",
       "help": "periodicStatusPollMsHelp",
       "default": 60000,
-      "xs": 12
+      "xs": 12,
+      "sm": 12,
+      "md": 6,
+      "lg": 4,
+      "xl": 3
     },
     "externalActivityPollAll": {
       "type": "checkbox",
       "label": "externalActivityPollAll",
       "help": "externalActivityPollAllHelp",
-      "xs": 12
+      "xs": 12,
+      "sm": 12,
+      "md": 6,
+      "lg": 4,
+      "xl": 4
     },
     "ackIncoming": {
       "type": "checkbox",
       "label": "ackIncoming",
       "help": "ackIncomingHelp",
-      "xs": 12
+      "xs": 12,
+      "sm": 12,
+      "md": 6,
+      "lg": 4,
+      "xl": 4
     },
     "debugRaw": {
       "type": "checkbox",
       "label": "debugRaw",
       "help": "debugRawHelp",
-      "xs": 12
+      "xs": 12,
+      "sm": 12,
+      "md": 6,
+      "lg": 4,
+      "xl": 4
     },
     "flushPartialMs": {
       "type": "number",
       "label": "flushPartialMs",
       "help": "flushPartialMsHelp",
       "default": 500,
-      "xs": 12
+      "xs": 12,
+      "sm": 12,
+      "md": 6,
+      "lg": 4,
+      "xl": 3
     },
     "readAnswerTimeoutMs": {
       "type": "number",
       "label": "readAnswerTimeoutMs",
       "help": "readAnswerTimeoutMsHelp",
       "default": 1000,
-      "xs": 12
+      "xs": 12,
+      "sm": 12,
+      "md": 6,
+      "lg": 4,
+      "xl": 3
     },
     "commandTimeoutMs": {
       "type": "number",
       "label": "commandTimeoutMs",
       "help": "commandTimeoutMsHelp",
       "default": 5000,
-      "xs": 12
+      "xs": 12,
+      "sm": 12,
+      "md": 6,
+      "lg": 4,
+      "xl": 3
     },
     "reconnectIntervalMs": {
       "type": "number",
       "label": "reconnectIntervalMs",
       "help": "reconnectIntervalMsHelp",
       "default": 10000,
-      "xs": 12
+      "xs": 12,
+      "sm": 12,
+      "md": 6,
+      "lg": 4,
+      "xl": 3
     }
   }
 }

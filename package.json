@@ -1,12 +1,15 @@
 {
   "name": "iobroker.duofernstick",
-  "version": "0.1.28",
+  "version": "0.1.29",
   "description": "ioBroker adapter for Rademacher DuoFern USB Stick",
   "main": "main.js",
   "scripts": {
-    "test": "node test/protocol.test.js && node test/state-update.test.js",
+    "test": "npm run test:js && npm run test:unit && npm run test:package",
     "check": "node --check main.js && node --check lib/protocol.js && node --check lib/commands.js && node --check lib/duofern-parser.js && node --check lib/state-manager.js && node --check lib/device-types.js && node --check admin/words.js",
-    "lint": "node --check main.js && node --check lib/protocol.js && node --check lib/commands.js && node --check lib/duofern-parser.js && node --check lib/state-manager.js && node --check lib/device-types.js && node --check admin/words.js"
+    "lint": "node --check main.js && node --check lib/protocol.js && node --check lib/commands.js && node --check lib/duofern-parser.js && node --check lib/state-manager.js && node --check lib/device-types.js && node --check admin/words.js",
+    "test:js": "node --check main.js && node --check lib/protocol.js && node --check lib/commands.js && node --check lib/duofern-parser.js && node --check lib/state-manager.js && node --check lib/device-types.js && node --check admin/words.js",
+    "test:unit": "node test/protocol.test.js && node test/state-update.test.js",
+    "test:package": "npm pack --dry-run"
   },
   "keywords": [
     "ioBroker",
