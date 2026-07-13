@@ -243,6 +243,10 @@ For diagnostics, the following information is useful:
 
 ## Changelog
 
+### 0.1.29
+
+- Fix GitHub workflow requirements for Node.js 22/24 adapter tests, restore the recommended concurrency configuration and document the current release for the ioBroker checker.
+
 ### 0.1.28
 - Fix jsonConfig layout, node.js workflows and translations
 
