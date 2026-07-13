@@ -1,19 +1,25 @@
 name: Test and Release
 
+# Run this job on all pushes and pull requests
+# as well as tags with a semantic version
 on:
   push:
     branches:
-      - main
+      - "main"
     tags:
+      # normal versions
       - "v[0-9]+.[0-9]+.[0-9]+"
+      # pre-releases
       - "v[0-9]+.[0-9]+.[0-9]+-**"
   pull_request: {}
 
+# Cancel previous PR/branch runs when a new commit is pushed
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: ${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
+  # Performs quick checks before the expensive test runs
   check-and-lint:
     if: contains(github.event.head_commit.message, '[skip ci]') == false
     runs-on: ubuntu-latest
@@ -24,6 +30,7 @@ jobs:
           install-command: 'npm install --no-audit --no-fund'
           lint: true
 
+  # Runs adapter tests on all required node versions and OSes
   adapter-tests:
     needs: check-and-lint
     if: contains(github.event.head_commit.message, '[skip ci]') == false
@@ -31,7 +38,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node-version: ['24.x']
+        node-version: [22.x, 24.x]
         os: [ubuntu-latest, windows-latest, macos-latest]
     steps:
       - uses: ioBroker/testing-action-adapter@v2
