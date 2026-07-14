@@ -71,6 +71,19 @@
       "link": "https://opensource.org/license/mit"
     },
     "news": {
+      "0.1.30": {
+        "en": "Fixes responsive jsonConfig sizes, admin translations and CI metadata for the repository checker.",
+        "de": "Korrigiert responsive jsonConfig-Größen, Admin-Übersetzungen und CI-Metadaten für den Repository-Checker.",
+        "ru": "Исправлены адаптивные размеры jsonConfig, переводы админки и метаданные CI для проверки репозитория.",
+        "pt": "Corrige tamanhos responsivos do jsonConfig, traduções da administração e metadados de CI para o verificador do repositório.",
+        "nl": "Corrigeert responsieve jsonConfig-formaten, adminvertalingen en CI-metadata voor de repositorychecker.",
+        "fr": "Corrige les tailles responsives de jsonConfig, les traductions d’administration et les métadonnées CI pour le vérificateur du dépôt.",
+        "it": "Corregge le dimensioni responsive di jsonConfig, le traduzioni admin e i metadati CI per il controllo del repository.",
+        "es": "Corrige los tamaños responsivos de jsonConfig, las traducciones de administración y los metadatos de CI para el verificador del repositorio.",
+        "pl": "Poprawia responsywne rozmiary jsonConfig, tłumaczenia panelu administracyjnego i metadane CI dla sprawdzania repozytorium.",
+        "uk": "Виправлено адаптивні розміри jsonConfig, переклади адмінпанелі та метадані CI для перевірки репозиторію.",
+        "zh-cn": "修复 jsonConfig 响应式尺寸、管理界面翻译以及仓库检查器所需的 CI 元数据。"
+      },
       "0.1.29": {
         "en": "Fixes responsive jsonConfig sizes, admin translations and CI metadata for the repository checker.",
         "de": "Korrigiert responsive jsonConfig-Größen, Admin-Übersetzungen und CI-Metadaten für den Repository-Checker.",
