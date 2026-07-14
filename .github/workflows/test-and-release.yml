@@ -49,6 +49,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
           os: ${{ matrix.os }}
           install-command: 'npm install --no-audit --no-fund'
+          integration-test-command: 'echo "No integration tests defined, skipping..."'
           package-cache: 'false'
 
   deploy:
