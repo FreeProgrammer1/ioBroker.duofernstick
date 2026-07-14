@@ -7,16 +7,19 @@ on:
     branches:
       - "main"
     tags:
-      # normal versions
       - "v[0-9]+.[0-9]+.[0-9]+"
-      # pre-releases
       - "v[0-9]+.[0-9]+.[0-9]+-**"
   pull_request: {}
 
-# Cancel previous PR/branch runs when a new commit is pushed
 concurrency:
   group: ${{ github.ref }}
   cancel-in-progress: true
+
+env:
+  NPM_CONFIG_REGISTRY: https://registry.npmjs.org/
+  NPM_CONFIG_FETCH_RETRIES: 5
+  NPM_CONFIG_FETCH_RETRY_MINTIMEOUT: 20000
+  NPM_CONFIG_FETCH_RETRY_MAXTIMEOUT: 120000
 
 jobs:
   # Performs quick checks before the expensive test runs
