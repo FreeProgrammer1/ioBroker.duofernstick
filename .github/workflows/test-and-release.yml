@@ -31,6 +31,7 @@ jobs:
         with:
           node-version: '24.x'
           install-command: 'npm install --no-audit --no-fund'
+          package-cache: 'false'
           lint: true
 
   # Runs adapter tests on all required node versions and OSes
