@@ -83,45 +83,6 @@
         "pl": "Poprawia responsywne rozmiary jsonConfig, tłumaczenia panelu administracyjnego i metadane CI dla sprawdzania repozytorium.",
         "uk": "Виправлено адаптивні розміри jsonConfig, переклади адмінпанелі та метадані CI для перевірки репозиторію.",
         "zh-cn": "修复 jsonConfig 响应式尺寸、管理界面翻译以及仓库检查器所需的 CI 元数据。"
-      },
-      "0.1.26": {
-        "en": "Restore the proven DuoFern runtime and keep compatibility with the current GitHub adapter structure.",
-        "de": "Bewährte DuoFern-Laufzeitlogik wiederhergestellt und mit der aktuellen GitHub-Adapterstruktur kompatibel gemacht.",
-        "ru": "Восстановлена проверенная среда выполнения DuoFern с сохранением совместимости с текущей структурой адаптера GitHub.",
-        "pt": "Restaurado o runtime DuoFern comprovado mantendo a compatibilidade com a estrutura atual do adaptador no GitHub.",
-        "nl": "Bewezen DuoFern-runtime hersteld en compatibel gehouden met de huidige GitHub-adapterstructuur.",
-        "fr": "Restauration de l’exécution DuoFern éprouvée tout en conservant la compatibilité avec la structure actuelle de l’adaptateur GitHub.",
-        "it": "Ripristinata la runtime DuoFern collaudata mantenendo la compatibilità con l’attuale struttura dell’adapter su GitHub.",
-        "es": "Restaurado el runtime DuoFern probado manteniendo la compatibilidad con la estructura actual del adaptador en GitHub.",
-        "pl": "Przywrócono sprawdzone środowisko DuoFern z zachowaniem zgodności z bieżącą strukturą adaptera GitHub.",
-        "uk": "Відновлено перевірену логіку виконання DuoFern із сумісністю з поточною структурою адаптера GitHub.",
-        "zh-cn": "恢复经过验证的 DuoFern 运行逻辑，并保持与当前 GitHub 适配器结构兼容。"
-      },
-      "0.1.27": {
-        "en": "Added jsonConfig translations, removed legacy admin page and replaced plain timers with adapter timers for ioBroker checker compliance.",
-        "de": "jsonConfig-Übersetzungen ergänzt, alte Admin-Seite entfernt und direkte Timer durch Adapter-Timer für ioBroker-Checker-Konformität ersetzt.",
-        "ru": "Добавлены переводы jsonConfig, удалена устаревшая страница admin и прямые таймеры заменены таймерами адаптера для соответствия проверке ioBroker.",
-        "pt": "Adicionadas traduções jsonConfig, removida a página admin antiga e substituídos temporizadores diretos por temporizadores do adaptador para conformidade com o verificador ioBroker.",
-        "nl": "jsonConfig-vertalingen toegevoegd, verouderde adminpagina verwijderd en directe timers vervangen door adaptertimers voor ioBroker-checkercompatibiliteit.",
-        "fr": "Ajout des traductions jsonConfig, suppression de l’ancienne page admin et remplacement des minuteurs directs par des minuteurs d’adaptateur pour la conformité au vérificateur ioBroker.",
-        "it": "Aggiunte le traduzioni jsonConfig, rimossa la vecchia pagina admin e sostituiti i timer diretti con i timer dell’adapter per la conformità al checker ioBroker.",
-        "es": "Añadidas traducciones jsonConfig, eliminada la página admin antigua y sustituidos temporizadores directos por temporizadores del adaptador para cumplir con el comprobador ioBroker.",
-        "pl": "Dodano tłumaczenia jsonConfig, usunięto starą stronę admin i zastąpiono bezpośrednie timery timerami adaptera dla zgodności z kontrolerem ioBroker.",
-        "uk": "Додано переклади jsonConfig, видалено застарілу сторінку admin і замінено прямі таймери таймерами адаптера для відповідності перевірці ioBroker.",
-        "zh-cn": "添加 jsonConfig 翻译，移除旧版管理页面，并将直接定时器替换为适配器定时器，以符合 ioBroker 检查要求。"
-      },
-      "0.1.28": {
-        "en": "Workflow adjusted to run CI checks on Node.js 22 to avoid a npm runner issue while keeping the working DuoFern runtime.",
-        "de": "Workflow angepasst: CI-Prüfungen laufen auf Node.js 22, um ein npm-Runner-Problem zu umgehen; die funktionierende DuoFern-Runtime bleibt unverändert.",
-        "ru": "Рабочий процесс настроен: проверки CI выполняются на Node.js 22 для обхода проблемы npm runner; рабочая среда DuoFern не изменена.",
-        "pt": "Fluxo de trabalho ajustado: as verificações de CI executam em Node.js 22 para contornar um problema do npm runner; a runtime DuoFern funcional permanece inalterada.",
-        "nl": "Workflow aangepast: CI-controles draaien op Node.js 22 om een npm-runnerprobleem te omzeilen; de werkende DuoFern-runtime blijft ongewijzigd.",
-        "fr": "Workflow ajusté : les contrôles CI s’exécutent avec Node.js 22 afin de contourner un problème du runner npm ; le runtime DuoFern fonctionnel reste inchangé.",
-        "it": "Workflow aggiornato: i controlli CI vengono eseguiti con Node.js 22 per aggirare un problema del runner npm; il runtime DuoFern funzionante resta invariato.",
-        "es": "Flujo de trabajo ajustado: las comprobaciones CI se ejecutan con Node.js 22 para evitar un problema del runner npm; la runtime DuoFern funcional no cambia.",
-        "pl": "Dostosowano workflow: kontrole CI działają na Node.js 22, aby obejść problem runnera npm; działające środowisko DuoFern pozostaje bez zmian.",
-        "uk": "Робочий процес змінено: перевірки CI виконуються на Node.js 22, щоб обійти проблему npm runner; робоче середовище DuoFern не змінено.",
-        "zh-cn": "已调整工作流：CI 检查使用 Node.js 22 运行，以绕过 npm runner 问题；可工作的 DuoFern 运行逻辑保持不变。"
       }
     }
   },
