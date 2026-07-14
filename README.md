@@ -245,6 +245,10 @@ For diagnostics, the following information is useful:
 
 ### 0.1.29
 
+- Bug Fix
+  
+### 0.1.29
+
 - Fix GitHub workflow requirements for Node.js 22/24 adapter tests, restore the recommended concurrency configuration and document the current release for the ioBroker checker.
 
 ### 0.1.28
@@ -257,10 +261,6 @@ For diagnostics, the following information is useful:
 - Removed legacy Materialize admin page because jsonConfig is used.
 - Replaced plain timers with adapter timers for ioBroker checker compliance.
 
-### 0.1.26
-
-- Restored the proven DuoFern runtime logic and kept compatibility with the current GitHub/ioBroker package structure.
-- Keeps support for the previous `port` configuration and the newer `serialPort` alias.
 
 Older changelog entries are kept in [CHANGELOG_OLD.md](CHANGELOG_OLD.md).
 
