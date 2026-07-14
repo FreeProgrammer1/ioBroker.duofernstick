@@ -45,7 +45,7 @@ jobs:
         node-version: [22.x, 24.x]
         os: [ubuntu-latest, windows-latest, macos-latest]
     steps:
-      - uses: ioBroker/testing-action-adapter@v2
+      - uses: ioBroker/testing-action-adapter@v1
         with:
           node-version: ${{ matrix.node-version }}
           os: ${{ matrix.os }}
@@ -62,7 +62,7 @@ jobs:
       id-token: write
       contents: write
     steps:
-      - uses: ioBroker/testing-action-deploy@v2
+      - uses: ioBroker/testing-action-deploy@v1
         with:
           node-version: '24.x'
           github-token: ${{ secrets.GITHUB_TOKEN }}
