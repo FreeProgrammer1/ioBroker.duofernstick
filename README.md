@@ -242,6 +242,9 @@ For diagnostics, the following information is useful:
 - ioBroker log output during startup and device actions
 
 ## Changelog
+### 0.1.30
+
+- Bug Fix'S
 
 ### 0.1.29
 
