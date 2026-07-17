@@ -29,7 +29,7 @@
   },
   "devDependencies": {
     "@iobroker/testing": "^5.2.2",
-    "@types/node": "^22.15.0",
+    "@types/node": "^26.1.1",
     "@iobroker/eslint-config": "^2.3.4",
     "@iobroker/adapter-dev": "^1.5.0",
     "@tsconfig/node22": "^22.0.5"
