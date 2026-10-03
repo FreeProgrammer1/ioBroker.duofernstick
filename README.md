@@ -36,8 +36,8 @@ Depending on the detected device type, only suitable or observed states are crea
 ## Requirements
 
 - ioBroker with js-controller 6.0.11 or newer
-- Node.js 20 or newer
-- ioBroker Admin 7.6.17 or newer
+- Node.js 22 or newer
+- ioBroker Admin 7.6.20 or newer
 - Rademacher DuoFern USB Stick
 - Access to the serial device of the USB stick
 
@@ -68,14 +68,20 @@ The main settings are available in the Admin configuration page of the adapter i
 
 | Setting | Description |
 | --- | --- |
-| `serialPort` | Serial port of the DuoFern USB Stick |
+| `port` | Serial port of the DuoFern USB Stick (selectable from a list of detected ports) |
 | `baudRate` | Baud rate, default: `115200` |
-| `dongleSerial` | Serial number of the DuoFern stick, usually starting with `6F` |
-| `autoCreateDevices` | Automatically create detected devices |
+| `dongleSerial` | 6 digit DuoFern radio code of the stick, starting with `6F` (not the USB serial number) |
+| `deviceCodes` | Known device codes (comma separated or FHEM `define` lines) |
+| `autoCreate` | Automatically create detected devices |
+| `initOnStart` | Send the DuoFern init sequence on start |
 | `statusOnStart` | Request device status when the adapter starts |
-| `preserveUnknownValues` | Preserve existing values when incoming telegrams are incomplete |
-| `createOnlySupportedStates` | Create only suitable or observed states per device |
+| `statusAfterCommand` | Request device status after movement/control commands |
+| `periodicStatusPoll` / `periodicStatusPollMs` | Cyclic status polling of all known actuators, default every 5 minutes |
+| `externalActivityPollAll` | Poll known actuators after remote control or sensor telegrams |
+| `invertPosition` | Use the ioBroker convention for blinds (0 % = closed, 100 % = open) instead of the DuoFern convention (0 % = open) |
 | `debugRaw` | Log raw telegrams for diagnostics |
+
+DuoFern uses the 868 MHz band with a 1 % duty cycle. Very short polling intervals with many devices can exceed the allowed airtime; status requests are therefore queued with low priority, deduplicated and limited, while user commands are always sent first.
 
 ## Object structure
 
@@ -84,28 +90,28 @@ The adapter creates the following main object tree:
 ```text
 duofernstick.0
 ├── info
-│   ├── connection
-│   ├── lastRawTelegram
+│   ├── connection          (true after successful stick init)
+│   ├── dongleSerial
+│   ├── rawRx / rawTx
+│   ├── lastParsed / lastStatusDecode
 │   └── lastError
-├── control
-│   ├── pair
-│   ├── unpair
+├── status.state
+├── queue.pending / queue.active
+├── pair.mode
+├── commands
+│   ├── pair / unpair
 │   ├── statusBroadcast
-│   └── raw
+│   ├── reopen
+│   ├── raw
+│   ├── remotePair
+│   ├── addDeviceCode
+│   └── cleanupUnusedDeviceStates
 └── devices
-    └── <deviceId>
-        ├── serial
-        ├── deviceType
-        ├── deviceTypeName
-        ├── lastSeen
-        ├── rawTelegram
+    └── <deviceCode>
+        ├── raw, lastSeen, deviceClass, deviceProfile, stateText
         ├── command
-        ├── getStatus
-        ├── up
-        ├── down
-        ├── stop
-        ├── position
-        └── ...
+        ├── up, down, stop, position, ...
+        └── control.*
 ```
 
 The exact number of states depends on the detected device type.
@@ -115,7 +121,7 @@ The exact number of states depends on the detected device type.
 ### Start pairing
 
 ```text
-duofernstick.0.control.pair = true
+duofernstick.0.commands.pair = true
 ```
 
 Starts pairing mode of the stick.
@@ -123,7 +129,7 @@ Starts pairing mode of the stick.
 ### Start unpairing
 
 ```text
-duofernstick.0.control.unpair = true
+duofernstick.0.commands.unpair = true
 ```
 
 Starts unpairing mode of the stick.
@@ -131,7 +137,7 @@ Starts unpairing mode of the stick.
 ### Send status broadcast
 
 ```text
-duofernstick.0.control.statusBroadcast = true
+duofernstick.0.commands.statusBroadcast = true
 ```
 
 Requests status information from known or reachable devices.
@@ -139,7 +145,7 @@ Requests status information from known or reachable devices.
 ### Send raw telegram
 
 ```text
-duofernstick.0.control.raw = <HEX_TELEGRAM>
+duofernstick.0.commands.raw = <HEX_TELEGRAM>
 ```
 
 Sends a raw telegram as a hexadecimal string. This is mainly intended for diagnostics and development.
@@ -182,13 +188,12 @@ Typical read-only status values are:
 | State | Description |
 | --- | --- |
 | `position` | Current position in percent |
-| `moving` | Device is currently moving |
-| `direction` | Movement direction: `up`, `down`, `stop` or `unknown` |
+| `moving` | Movement direction: `up`, `down`, `stop` or `moving` |
 | `runningTime` | Runtime in seconds |
 | `lastSeen` | Timestamp of the last received telegram |
-| `rawTelegram` | Last telegram received from this device |
-| `deviceType` | DuoFern device type code |
-| `deviceTypeName` | Detected device name |
+| `raw` | Last telegram received from this device |
+| `deviceClass` | Detected DuoFern device class |
+| `deviceProfile` | Command/state profile used for this device |
 
 Incoming telegrams are handled as partial state updates. If a telegram does not contain a runtime value, an already existing runtime value is not automatically reset to `0`.
 
@@ -216,8 +221,8 @@ dmesg | grep -i tty
 
 Check the following points:
 
-- `autoCreateDevices` is enabled.
-- Raw telegrams appear in `info.lastRawTelegram`.
+- `autoCreate` is enabled.
+- Raw telegrams appear in `info.rawRx`.
 - `debugRaw` is enabled for diagnostics.
 - A DuoFern device or remote control action has been triggered.
 
@@ -242,28 +247,41 @@ For diagnostics, the following information is useful:
 - ioBroker log output during startup and device actions
 
 ## Changelog
+<!--
+    Placeholder for the next version (at the beginning of the line):
+    ### **WORK IN PROGRESS**
+-->
+### 0.1.31 (2026-10-02)
+
+- (FreeProgrammer1) Received serial data is now processed strictly in order (no parallel frame handling).
+- (FreeProgrammer1) Removed a hard-coded stick radio code that was applied for one specific USB path.
+- (FreeProgrammer1) Fixed lost status refresh timers after the init sequence.
+- (FreeProgrammer1) `info.connection` is only `true` after a successful stick init.
+- (FreeProgrammer1) Device objects are created once per runtime instead of on every telegram (far fewer object database writes).
+- (FreeProgrammer1) Command queue: user commands before status polls, duplicate telegrams are skipped, status polls are limited.
+- (FreeProgrammer1) Default polling interval raised to 5 minutes (existing instances keep their setting).
+- (FreeProgrammer1) New option `invertPosition` for the ioBroker blind convention (100 % = open).
+- (FreeProgrammer1) Serial port can be selected from a list in the admin UI.
+- (FreeProgrammer1) Buttons are now `read: false`; instance objects moved to `instanceObjects`.
+- (FreeProgrammer1) Removed unused modules, standard package/integration tests, release-script, full MIT license, i18n short format.
+
 ### 0.1.30
 
-- Bug Fix'S
+- (FreeProgrammer1) Fixes responsive jsonConfig sizes, admin translations and CI metadata for the repository checker.
 
 ### 0.1.29
 
-- Bug Fix
-  
-### 0.1.29
-
-- Fix GitHub workflow requirements for Node.js 22/24 adapter tests, restore the recommended concurrency configuration and document the current release for the ioBroker checker.
+- (FreeProgrammer1) Fix GitHub workflow requirements for Node.js 22/24 adapter tests, restore the recommended concurrency configuration and document the current release for the ioBroker checker.
 
 ### 0.1.28
-- Fix jsonConfig layout, node.js workflows and translations
 
+- (FreeProgrammer1) Fix jsonConfig layout, node.js workflows and translations.
 
 ### 0.1.27
 
-- Added jsonConfig i18n files for all required ioBroker languages.
-- Removed legacy Materialize admin page because jsonConfig is used.
-- Replaced plain timers with adapter timers for ioBroker checker compliance.
-
+- (FreeProgrammer1) Added jsonConfig i18n files for all required ioBroker languages.
+- (FreeProgrammer1) Removed legacy Materialize admin page because jsonConfig is used.
+- (FreeProgrammer1) Replaced plain timers with adapter timers for ioBroker checker compliance.
 
 Older changelog entries are kept in [CHANGELOG_OLD.md](CHANGELOG_OLD.md).
 
@@ -271,4 +289,4 @@ Older changelog entries are kept in [CHANGELOG_OLD.md](CHANGELOG_OLD.md).
 
 MIT License
 
-Copyright (c) 2026 iobroker-community-adapters
+Copyright (c) 2026 FreeProgrammer1

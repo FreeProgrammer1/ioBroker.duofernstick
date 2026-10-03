@@ -27,6 +27,13 @@ function normalizeSerialPath(value) {
 
 const protocol = require('./lib/protocol');
 
+// Obergrenze für wartende Statusabfragen. Bedienbefehle werden immer angenommen.
+const MAX_QUEUE_LENGTH = 50;
+// Standardintervall der zyklischen Statusabfrage (5 Minuten). DuoFern funkt auf 868 MHz mit 1 % Duty Cycle.
+const DEFAULT_POLL_INTERVAL_MS = 300000;
+// Readings, die bei aktivierter Positionsumkehr invertiert werden (ioBroker-Konvention level.blind: 100 = offen).
+const INVERTIBLE_POSITION_READINGS = ['position', 'targetPosition'];
+
 class Duofernstick extends utils.Adapter {
     constructor(options = {}) {
         super({ ...options, name: 'duofernstick' });
@@ -59,10 +66,17 @@ class Duofernstick extends utils.Adapter {
         this.periodicStatusPollCount = 0;
         // Verhindert, dass mehrere Rundläufe gleichzeitig gestartet werden.
         this.periodicStatusPollActive = false;
+        // Serialisiert die Verarbeitung eingehender Daten, damit Frames strikt nacheinander behandelt werden.
+        this.rxChain = Promise.resolve();
+        // Objekt-IDs, die in dieser Laufzeit bereits angelegt/aktualisiert wurden (spart Objekt-DB-Schreibzugriffe).
+        this.ensuredObjects = new Set();
+        // Geräte, deren Objektbaum in dieser Laufzeit bereits vollständig angelegt wurde.
+        this.deviceObjectsReady = new Set();
 
         this.on('ready', this.onReady.bind(this));
         this.on('stateChange', this.onStateChange.bind(this));
         this.on('unload', this.onUnload.bind(this));
+        this.on('message', this.onMessage.bind(this));
     }
 
     async onReady() {
@@ -85,13 +99,6 @@ class Duofernstick extends utils.Adapter {
             this.config.autoCreateDevices = this.config.autoCreate;
         }
         this.dongleSerial = protocol.extractDongleSerial(this.config.dongleSerial || '');
-        // Bestehende ioBroker-Instanzen behalten ihre alte native Konfiguration nach Updates.
-        // Wenn der bekannte USB-Pfad genutzt wird und noch kein sinnvoller Funkcode gesetzt ist,
-        // wird der passende Stick-Funkcode automatisch als Startwert verwendet.
-        if ((!this.config.dongleSerial || this.dongleSerial === '6FEDCB') && String(this.config.port || '').includes('WR029A2I')) {
-            this.log.warn('Existing config still uses empty/default DongleSerial, but the configured stick path is WR029A2I. Using the known DuoFern radio code 6F1A6F for this stick.');
-            this.dongleSerial = '6F1A6F';
-        }
         await this.ensureBaseObjects();
         await this.setStateSafe('info.connection', false, true);
         await this.setStateSafe('info.dongleSerial', this.dongleSerial, true);
@@ -215,6 +222,9 @@ class Duofernstick extends utils.Adapter {
     }
 
     async ensureStateObject(id, common, native = {}) {
+        if (this.ensuredObjects.has(id)) {
+            return;
+        }
         try {
             const existing = await this.getObjectAsync(id).catch(() => null);
             if (existing) {
@@ -226,12 +236,16 @@ class Duofernstick extends utils.Adapter {
             } else {
                 await this.setObjectNotExistsAsync(id, { type: 'state', common, native });
             }
+            this.ensuredObjects.add(id);
         } catch (error) {
             this.log.debug(`Could not ensure state object ${id}: ${error.message}`);
         }
     }
 
     async ensureChannelObject(id, common, native = {}) {
+        if (this.ensuredObjects.has(id)) {
+            return;
+        }
         try {
             const existing = await this.getObjectAsync(id).catch(() => null);
             if (existing) {
@@ -243,6 +257,7 @@ class Duofernstick extends utils.Adapter {
             } else {
                 await this.setObjectNotExistsAsync(id, { type: 'channel', common, native });
             }
+            this.ensuredObjects.add(id);
         } catch (error) {
             this.log.debug(`Could not ensure channel object ${id}: ${error.message}`);
         }
@@ -343,7 +358,10 @@ class Duofernstick extends utils.Adapter {
         });
 
         this.serial.on('data', data => {
-            void this.handleSerialData(data);
+            // Strikt sequenziell verarbeiten: ACK-, Queue- und readAnswer-Logik dürfen sich nicht überholen.
+            this.rxChain = this.rxChain
+                .then(() => this.handleSerialData(data))
+                .catch(error => this.log.warn(`Error while processing received data: ${error.message}`));
         });
 
         this.serial.on('error', error => {
@@ -361,16 +379,20 @@ class Duofernstick extends utils.Adapter {
                 return;
             }
             this.log.info(`Serial port opened: ${path}@${baudRate}`);
-            await this.setStateSafe('info.connection', true, true);
             await this.setStateSafe('status.state', 'connected', true);
 
             if (this.config.initOnStart !== false) {
                 const ok = await this.doDuoFernInit();
+                // info.connection zeigt nur dann "verbunden", wenn der Stick auch initialisiert wurde.
+                await this.setStateSafe('info.connection', ok, true);
                 if (!ok) {
-                    this.log.error('DuoFern init failed after retries. Adapter stays connected, but commands may not work until reopen/init succeeds.');
+                    this.log.error('DuoFern init failed after retries. Serial port stays open, but commands may not work until reopen/init succeeds (commands.reopen).');
                 }
-            } else if (this.config.statusOnStart !== false) {
-                this.enqueueSend(protocol.constants.duoStatusBroadcast, { name: 'statusBroadcast' });
+            } else {
+                await this.setStateSafe('info.connection', true, true);
+                if (this.config.statusOnStart !== false) {
+                    this.enqueueSend(protocol.constants.duoStatusBroadcast, { name: 'statusBroadcast', lowPriority: true });
+                }
             }
 
             // Startet nach erfolgreichem Öffnen eine zyklische Statusabfrage.
@@ -540,7 +562,11 @@ class Duofernstick extends utils.Adapter {
         const actorNotInitialized = /^81010C55/i.test(raw);
 
         if (parsed.deviceCode && this.config.autoCreate !== false) {
-            await this.createDeviceObjects(parsed.deviceCode, 'auto');
+            const parsedCode = String(parsed.deviceCode).substring(0, 6).toUpperCase();
+            await this.setStateSafe('info.lastDeviceCode', parsedCode, true);
+            if (!this.deviceObjectsReady.has(parsedCode)) {
+                await this.createDeviceObjects(parsed.deviceCode, 'auto');
+            }
             await this.updateDeviceFromTelegram(parsed.deviceCode, parsed);
 
             if (actorCommandAck && this.isPollableDeviceCode(parsed.deviceCode)) {
@@ -780,7 +806,9 @@ class Duofernstick extends utils.Adapter {
         await this.setStateSafe('info.lastStatusDecode', JSON.stringify(decodeInfo), true);
 
         const profileContext = await this.readCurrentDeviceProfileContext(deviceCode);
+        const previousBlindsMode = profileContext.blindsMode;
         if (decoded.readings && decoded.readings.blindsMode !== undefined) profileContext.blindsMode = decoded.readings.blindsMode;
+        this.applyPositionInversionToReadings(decoded);
         for (const [reading, value] of Object.entries(decoded.readings || {})) {
             const meta = decoded.readingMeta && decoded.readingMeta[reading] ? decoded.readingMeta[reading] : {};
             if (!this.isProfileReadingAllowed(deviceCode, reading, profileContext)) {
@@ -793,7 +821,9 @@ class Duofernstick extends utils.Adapter {
                 await this.setStateSafe(`${base}.${reading}`, value, true);
             }
         }
-        if (decoded.readings && decoded.readings.blindsMode !== undefined) {
+        if (decoded.readings && decoded.readings.blindsMode !== undefined && Boolean(decoded.readings.blindsMode) !== Boolean(previousBlindsMode)) {
+            // Profil (Jalousie-/Rollladenmodus) hat sich geändert: Objektbaum neu abgleichen.
+            this.deviceObjectsReady.delete(deviceCode);
             await this.createDeviceObjects(deviceCode, 'profile-refresh');
         }
 
@@ -803,8 +833,9 @@ class Duofernstick extends utils.Adapter {
         if (this.isReliableDecodedStatus(decoded) && decoded.readings && decoded.readings.position !== undefined) {
             // rawPosition soll in diesem Adapter den gleichen, sichtbaren Bedienwert zeigen wie position.
             // Der interne Protokoll-Rohwert bleibt bei Bedarf in info.lastStatusDecode.readingMeta.position.rawValue sichtbar.
-            await this.ensureDecodedStateObject(`${base}.rawPosition`, decoded.readings.position, 'rawPosition');
-            await this.setStateSafe(`${base}.rawPosition`, decoded.readings.position, true);
+            const rawPos = this.config.invertPosition ? 100 - decoded.readings.position : decoded.readings.position;
+            await this.ensureDecodedStateObject(`${base}.rawPosition`, rawPos, 'rawPosition');
+            await this.setStateSafe(`${base}.rawPosition`, rawPos, true);
         }
 
         let stateText = '';
@@ -886,7 +917,6 @@ class Duofernstick extends utils.Adapter {
             return false;
         } finally {
             this.initRunning = false;
-        this.statusRefreshTimers = new Map();
         }
     }
 
@@ -950,9 +980,29 @@ class Duofernstick extends utils.Adapter {
             hex: String(hex || '').replace(/\s+/g, '').toUpperCase(),
             name: options.name || 'command',
             waitForAck: options.waitForAck !== false,
-            waitForResponse: Boolean(options.waitForResponse)
+            waitForResponse: Boolean(options.waitForResponse),
+            lowPriority: Boolean(options.lowPriority)
         };
-        this.sendQueue.push(item);
+        // Identische, noch wartende Telegramme nicht doppelt senden (spart Funk-Sendezeit / Duty Cycle).
+        if (this.sendQueue.some(queued => queued.hex === item.hex)) {
+            this.log.debug(`Skipping duplicate queued telegram (${item.name})`);
+            return;
+        }
+        if (item.lowPriority) {
+            if (this.sendQueue.length >= MAX_QUEUE_LENGTH) {
+                this.log.debug(`Send queue full (${this.sendQueue.length}); dropping status request ${item.name}`);
+                return;
+            }
+            this.sendQueue.push(item);
+        } else {
+            // Bedienbefehle vor wartende Statusabfragen einreihen, damit sie ohne Verzögerung rausgehen.
+            const firstLow = this.sendQueue.findIndex(queued => queued.lowPriority);
+            if (firstLow === -1) {
+                this.sendQueue.push(item);
+            } else {
+                this.sendQueue.splice(firstLow, 0, item);
+            }
+        }
         void this.updateQueueStates();
         void this.processQueue();
     }
@@ -1282,6 +1332,8 @@ class Duofernstick extends utils.Adapter {
             const mm = String(now.getFullYear() - 2000).padStart(2, '0') + String(now.getMonth() + 1).padStart(2, '0') + String(duoWeekday).padStart(2, '0') + String(now.getDate()).padStart(2, '0');
             const nn = String(now.getHours()).padStart(2, '0') + String(now.getMinutes()).padStart(2, '0') + String(now.getSeconds()).padStart(2, '0');
             frames = [protocol.constants.duoSetTime.replace('mmmmmmmm', mm).replace('nnnnnn', nn).replace('yyyyyy', code.substring(0, 6).toUpperCase())];
+        } else if (normalizedCommand === 'position' && this.config.invertPosition) {
+            frames = protocol.buildDeviceCommand(code, normalizedCommand, this.invertPercent(arg), { channel: '01', positionInverse: false });
         } else if (normalizedCommand === 'writeConfig') {
             throw new Error('writeConfig requires weather register values and is not sent automatically to avoid overwriting sensor configuration');
         } else {
@@ -1312,7 +1364,7 @@ class Duofernstick extends utils.Adapter {
         // Alte Timer entfernen, damit beim Reconnect kein doppelter Poller läuft.
         this.stopPeriodicStatusPolling();
         if (this.config.periodicStatusPoll === false) return;
-        const interval = Math.max(10000, Number(this.config.periodicStatusPollMs || 60000));
+        const interval = Math.max(10000, Number(this.config.periodicStatusPollMs || DEFAULT_POLL_INTERVAL_MS));
         this.log.info(`Periodic DuoFern status polling enabled (${interval} ms).`);
         const run = () => {
             if (this.isUnloaded) return;
@@ -1350,7 +1402,7 @@ class Duofernstick extends utils.Adapter {
                 this.setTimeout(() => {
                     if (this.isUnloaded) return;
                     try {
-                        this.enqueueSend(protocol.buildStatusRequest(code, 'getStatus'), { name: `${code} ${reason} getStatus` });
+                        this.enqueueSend(protocol.buildStatusRequest(code, 'getStatus'), { name: `${code} ${reason} getStatus`, lowPriority: true });
                     } catch (error) {
                         this.log.debug(`Could not poll status for ${code}: ${error.message}`);
                     }
@@ -1375,7 +1427,7 @@ class Duofernstick extends utils.Adapter {
                 : [1500, 5000, 12000];
         const timers = delays.map(delay => this.setTimeout(() => {
             if (this.isUnloaded) return;
-            this.enqueueSend(protocol.buildStatusRequest(deviceCode, 'getStatus'), { name: `${deviceCode} delayed getStatus ${reason} +${delay}ms` });
+            this.enqueueSend(protocol.buildStatusRequest(deviceCode, 'getStatus'), { name: `${deviceCode} delayed getStatus ${reason} +${delay}ms`, lowPriority: true });
         }, delay));
         this.statusRefreshTimers.set(deviceCode, timers);
     }
@@ -1399,7 +1451,9 @@ class Duofernstick extends utils.Adapter {
             const current = await this.getStateAsync(`${base}.position`).catch(() => null);
             const currentValue = Number(current && current.val);
             if (Number.isFinite(currentValue)) {
-                await this.setStateSafe(`${base}.moving`, target > currentValue ? 'down' : target < currentValue ? 'up' : 'stop', true);
+                // DuoFern: höherer Wert = weiter geschlossen. Bei invertierter Position umgekehrt.
+                const closing = this.config.invertPosition ? target < currentValue : target > currentValue;
+                await this.setStateSafe(`${base}.moving`, target === currentValue ? 'stop' : closing ? 'down' : 'up', true);
             } else {
                 await this.setStateSafe(`${base}.moving`, 'moving', true);
             }
@@ -1457,6 +1511,7 @@ class Duofernstick extends utils.Adapter {
             await this.ensureStateObject(`devices.${code}.${id}`, common, { coreDeviceState: true });
         }
         await this.cleanupDeviceObjects(code, 'auto');
+        this.deviceObjectsReady.add(code);
     }
 
     isRollerDevice(code) {
@@ -1548,6 +1603,7 @@ class Duofernstick extends utils.Adapter {
                 if (obj && obj.native && obj.native.dynamicReading === true) continue;
                 await this.delStateAsync(rel).catch(() => {});
                 await this.delObjectAsync(rel).catch(() => {});
+                this.ensuredObjects.delete(rel);
                 cleaned += 1;
             }
         } catch (error) {
@@ -1641,9 +1697,9 @@ class Duofernstick extends utils.Adapter {
             forceResponse: ['value', 0, 1, '']
         };
         const label = { en: name, de: name };
-        if (buttons.has(name)) return { name: label, type: 'boolean', role: 'button', read: true, write: true, def: false };
+        if (buttons.has(name)) return { name: label, type: 'boolean', role: 'button', read: false, write: true, def: false };
         if (name === 'state') return { name: label, type: 'boolean', role: 'switch', read: true, write: true, def: false };
-        if (name === 'on' || name === 'off') return { name: label, type: 'boolean', role: 'button', read: true, write: true, def: false };
+        if (name === 'on' || name === 'off') return { name: label, type: 'boolean', role: 'button', read: false, write: true, def: false };
         if (boolSwitches.has(name)) return { name: label, type: 'boolean', role: 'switch', read: true, write: true, def: false };
         if (name === 'rainDirection' || name === 'windDirection') return { name: label, type: 'string', role: 'state', read: true, write: true, states: upDown, def: 'down' };
         if (name === 'reset') return { name: label, type: 'string', role: 'state', read: true, write: true, states: resetStates, def: '' };
@@ -1684,11 +1740,11 @@ class Duofernstick extends utils.Adapter {
             targetLevel: { name: { en: 'Target level', de: 'Ziel-Level' }, type: 'number', role: 'level.dimmer', read: true, write: false, min: 0, max: 100, unit: '%', def: 0 },
             state: { name: { en: 'State / switch', de: 'Zustand / Schalten' }, type: 'boolean', role: 'switch', read: true, write: true, def: false },
             moving: { name: { en: 'Moving', de: 'Bewegung' }, type: 'string', role: 'text', read: true, write: false, states: { up: 'up', down: 'down', stop: 'stop', moving: 'moving' }, def: 'stop' },
-            up: { name: { en: 'Up', de: 'Hoch' }, type: 'boolean', role: 'button', read: true, write: true, def: false },
-            down: { name: { en: 'Down', de: 'Runter' }, type: 'boolean', role: 'button', read: true, write: true, def: false },
-            stop: { name: { en: 'Stop', de: 'Stopp' }, type: 'boolean', role: 'button', read: true, write: true, def: false },
-            toggle: { name: { en: 'Toggle', de: 'Umschalten' }, type: 'boolean', role: 'button', read: true, write: true, def: false },
-            getStatus: { name: { en: 'Get status', de: 'Status abfragen' }, type: 'boolean', role: 'button', read: true, write: true, def: false },
+            up: { name: { en: 'Up', de: 'Hoch' }, type: 'boolean', role: 'button', read: false, write: true, def: false },
+            down: { name: { en: 'Down', de: 'Runter' }, type: 'boolean', role: 'button', read: false, write: true, def: false },
+            stop: { name: { en: 'Stop', de: 'Stopp' }, type: 'boolean', role: 'button', read: false, write: true, def: false },
+            toggle: { name: { en: 'Toggle', de: 'Umschalten' }, type: 'boolean', role: 'button', read: false, write: true, def: false },
+            getStatus: { name: { en: 'Get status', de: 'Status abfragen' }, type: 'boolean', role: 'button', read: false, write: true, def: false },
             manualMode: { name: { en: 'Manual mode', de: 'Manueller Modus' }, type: 'boolean', role: 'switch', read: true, write: true, def: false },
             timeAutomatic: { name: { en: 'Time automatic', de: 'Zeitautomatik' }, type: 'boolean', role: 'switch', read: true, write: true, def: false },
             sunAutomatic: { name: { en: 'Sun automatic', de: 'Sonnenautomatik' }, type: 'boolean', role: 'switch', read: true, write: true, def: false },
@@ -1722,6 +1778,71 @@ class Duofernstick extends utils.Adapter {
             }
         }
         return { ...selected, ...controls };
+    }
+
+    /**
+     * Rechnet einen Prozentwert zwischen DuoFern-Darstellung (0 = offen) und
+     * ioBroker-Konvention für level.blind (100 = offen) um.
+     *
+     * @param {any} value Prozentwert
+     * @returns {number} invertierter Prozentwert
+     */
+    invertPercent(value) {
+        const num = Number(value);
+        if (!Number.isFinite(num)) {
+            return value;
+        }
+        return 100 - Math.max(0, Math.min(100, num));
+    }
+
+    /**
+     * Invertiert Positionswerte eines dekodierten Status, wenn die Option invertPosition aktiv ist.
+     *
+     * @param {object} decoded Ergebnis von protocol.decodeStatusTelegram
+     */
+    applyPositionInversionToReadings(decoded) {
+        if (!this.config.invertPosition || !decoded || !decoded.readings) {
+            return;
+        }
+        for (const name of INVERTIBLE_POSITION_READINGS) {
+            if (typeof decoded.readings[name] === 'number') {
+                decoded.readings[name] = this.invertPercent(decoded.readings[name]);
+            }
+        }
+    }
+
+    /**
+     * Beantwortet sendTo-Anfragen aus der Admin-Oberfläche (z. B. Liste der seriellen Ports).
+     *
+     * @param {ioBroker.Message} obj Nachricht
+     */
+    async onMessage(obj) {
+        if (!obj || !obj.command) {
+            return;
+        }
+        if (obj.command === 'listPorts') {
+            let result = [];
+            try {
+                if (SerialPort && typeof SerialPort.list === 'function') {
+                    const ports = await SerialPort.list();
+                    // /dev/serial/by-id/... ist stabiler als /dev/ttyUSBx und wird deshalb bevorzugt angezeigt.
+                    result = ports.map(port => {
+                        const path = port.pnpId && process.platform === 'linux' ? `/dev/serial/by-id/${port.pnpId}` : port.path;
+                        const info = [port.manufacturer, port.serialNumber].filter(Boolean).join(' ');
+                        return { value: path, label: info ? `${path} (${info})` : path };
+                    });
+                }
+            } catch (error) {
+                this.log.warn(`Could not list serial ports: ${error.message}`);
+            }
+            if (obj.callback) {
+                this.sendTo(obj.from, obj.command, result, obj.callback);
+            }
+            return;
+        }
+        if (obj.callback) {
+            this.sendTo(obj.from, obj.command, { error: `Unknown command ${obj.command}` }, obj.callback);
+        }
     }
 
     async onUnload(callback) {

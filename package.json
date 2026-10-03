@@ -1,15 +1,18 @@
 {
   "name": "iobroker.duofernstick",
-  "version": "0.1.30",
+  "version": "0.1.31",
   "description": "ioBroker adapter for Rademacher DuoFern USB Stick",
   "main": "main.js",
   "scripts": {
-    "test": "npm run test:js && npm run test:unit && npm run test:package",
-    "check": "node --check main.js && node --check lib/protocol.js && node --check lib/commands.js && node --check lib/duofern-parser.js && node --check lib/state-manager.js && node --check lib/device-types.js && node --check admin/words.js",
-    "lint": "node --check main.js && node --check lib/protocol.js && node --check lib/commands.js && node --check lib/duofern-parser.js && node --check lib/state-manager.js && node --check lib/device-types.js && node --check admin/words.js",
-    "test:js": "node --check main.js && node --check lib/protocol.js && node --check lib/commands.js && node --check lib/duofern-parser.js && node --check lib/state-manager.js && node --check lib/device-types.js && node --check admin/words.js",
-    "test:unit": "node test/protocol.test.js && node test/state-update.test.js",
-    "test:package": "npm pack --dry-run"
+    "check": "node --check main.js && node --check lib/protocol.js",
+    "lint": "node --check main.js && node --check lib/protocol.js",
+    "lint:eslint": "eslint -c eslint.config.mjs .",
+    "test:js": "mocha --config test/mocharc.custom.json \"test/unit/**/*.test.js\"",
+    "test:package": "mocha test/package --exit",
+    "test:integration": "mocha test/integration --exit",
+    "test": "npm run test:js && npm run test:package",
+    "translate": "translate-adapter",
+    "release": "release-script"
   },
   "keywords": [
     "ioBroker",
@@ -28,11 +31,16 @@
     "serialport": "^13.0.0"
   },
   "devDependencies": {
-    "@iobroker/testing": "^5.2.2",
-    "@types/node": "^22.15.0",
-    "@iobroker/eslint-config": "^2.3.4",
+    "@alcalzone/release-script": "^3.8.0",
+    "@alcalzone/release-script-plugin-iobroker": "^3.7.2",
+    "@alcalzone/release-script-plugin-license": "^3.7.0",
+    "@alcalzone/release-script-plugin-manual-review": "^3.7.0",
     "@iobroker/adapter-dev": "^1.5.0",
-    "@tsconfig/node22": "^22.0.5"
+    "@iobroker/eslint-config": "^2.3.4",
+    "@iobroker/testing": "^5.2.2",
+    "@tsconfig/node22": "^22.0.5",
+    "@types/node": "^22.15.0",
+    "mocha": "^11.7.1"
   },
   "engines": {
     "node": ">=22"

@@ -1,7 +1,7 @@
 {
   "common": {
     "name": "duofernstick",
-    "version": "0.1.30",
+    "version": "0.1.31",
     "titleLang": {
       "en": "DuoFern Stick",
       "de": "DuoFern Stick",
@@ -71,6 +71,19 @@
       "link": "https://opensource.org/license/mit"
     },
     "news": {
+      "0.1.31": {
+        "en": "Fixed parallel processing of received data, removed hard-coded stick code, much fewer object database writes, prioritised command queue without duplicates, optional position inversion, serial port selection in admin, standard tests.",
+        "de": "Parallele Verarbeitung empfangener Daten behoben, fest eingebauten Stick-Code entfernt, deutlich weniger Objekt-Schreibzugriffe, priorisierte Befehlswarteschlange ohne Duplikate, optionale Positionsumkehr, Auswahl des seriellen Ports im Admin, Standard-Tests.",
+        "ru": "Исправлена параллельная обработка принятых данных, удалён жёстко заданный код стика, значительно меньше записей в базу объектов, приоритетная очередь команд без дубликатов, опциональная инверсия позиции, выбор последовательного порта в админке, стандартные тесты.",
+        "pt": "Corrigido o processamento paralelo de dados recebidos, removido o código fixo do stick, muito menos gravações na base de objetos, fila de comandos priorizada sem duplicados, inversão opcional da posição, seleção da porta série no admin, testes padrão.",
+        "nl": "Parallelle verwerking van ontvangen data opgelost, hardgecodeerde stickcode verwijderd, veel minder schrijfacties naar de objectdatabase, geprioriteerde opdrachtwachtrij zonder duplicaten, optionele positie-inversie, seriële poortkeuze in admin, standaardtests.",
+        "fr": "Correction du traitement parallèle des données reçues, suppression du code de clé codé en dur, beaucoup moins d’écritures dans la base d’objets, file de commandes priorisée sans doublons, inversion de position optionnelle, sélection du port série dans l’admin, tests standard.",
+        "it": "Corretta l’elaborazione parallela dei dati ricevuti, rimosso il codice della chiavetta fisso, molte meno scritture nel database degli oggetti, coda comandi prioritaria senza duplicati, inversione posizione opzionale, selezione della porta seriale nell’admin, test standard.",
+        "es": "Corregido el procesamiento paralelo de datos recibidos, eliminado el código fijo del stick, muchas menos escrituras en la base de objetos, cola de comandos priorizada sin duplicados, inversión de posición opcional, selección del puerto serie en el admin, pruebas estándar.",
+        "pl": "Naprawiono równoległe przetwarzanie odebranych danych, usunięto zakodowany na stałe kod sticka, znacznie mniej zapisów do bazy obiektów, priorytetowa kolejka poleceń bez duplikatów, opcjonalne odwrócenie pozycji, wybór portu szeregowego w panelu, standardowe testy.",
+        "uk": "Виправлено паралельну обробку отриманих даних, видалено жорстко заданий код стика, значно менше записів у базу об’єктів, пріоритетна черга команд без дублікатів, опціональна інверсія позиції, вибір послідовного порту в адмінці, стандартні тести.",
+        "zh-cn": "修复接收数据的并行处理，移除硬编码的 USB 棒代码，大幅减少对象数据库写入，带优先级且无重复的命令队列，可选位置反转，管理界面中选择串口，标准测试。"
+      },
       "0.1.30": {
         "en": "Fixes responsive jsonConfig sizes, admin translations and CI metadata for the repository checker.",
         "de": "Korrigiert responsive jsonConfig-Größen, Admin-Übersetzungen und CI-Metadaten für den Repository-Checker.",
@@ -97,7 +110,8 @@
         "uk": "Виправлено адаптивні розміри jsonConfig, переклади адмінпанелі та метадані CI для перевірки репозиторію.",
         "zh-cn": "修复 jsonConfig 响应式尺寸、管理界面翻译以及仓库检查器所需的 CI 元数据。"
       }
-    }
+    },
+    "messagebox": true
   },
   "native": {
     "port": "",
@@ -115,14 +129,12 @@
     "readAnswerTimeoutMs": 1000,
     "statusAfterCommand": true,
     "periodicStatusPoll": true,
-    "periodicStatusPollMs": 60000,
+    "periodicStatusPollMs": 300000,
     "externalActivityPollAll": true,
-    "serialPort": "/dev/serial/by-id/usb-Rademacher_DuoFern_USB-Stick-if00-port0",
-    "autoCreateDevices": true,
-    "preserveUnknownValues": true,
-    "createOnlySupportedStates": true
+    "invertPosition": false
   },
-  "objects": [
+  "objects": [],
+  "instanceObjects": [
     {
       "_id": "info.connection",
       "type": "state",

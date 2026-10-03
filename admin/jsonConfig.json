@@ -3,7 +3,10 @@
   "i18n": true,
   "items": {
     "port": {
-      "type": "text",
+      "type": "autocompleteSendTo",
+      "command": "listPorts",
+      "jsonData": "{}",
+      "freeSolo": true,
       "label": "serialPort",
       "help": "serialPortHelp",
       "xs": 12,
@@ -21,7 +24,9 @@
       "sm": 12,
       "md": 6,
       "lg": 4,
-      "xl": 3
+      "xl": 3,
+      "min": 1200,
+      "max": 921600
     },
     "dongleSerial": {
       "type": "text",
@@ -97,17 +102,29 @@
       "type": "number",
       "label": "periodicStatusPollMs",
       "help": "periodicStatusPollMsHelp",
-      "default": 60000,
+      "default": 300000,
       "xs": 12,
       "sm": 12,
       "md": 6,
       "lg": 4,
-      "xl": 3
+      "xl": 3,
+      "min": 10000,
+      "max": 86400000
     },
     "externalActivityPollAll": {
       "type": "checkbox",
       "label": "externalActivityPollAll",
       "help": "externalActivityPollAllHelp",
+      "xs": 12,
+      "sm": 12,
+      "md": 6,
+      "lg": 4,
+      "xl": 4
+    },
+    "invertPosition": {
+      "type": "checkbox",
+      "label": "invertPosition",
+      "help": "invertPositionHelp",
       "xs": 12,
       "sm": 12,
       "md": 6,
@@ -143,7 +160,9 @@
       "sm": 12,
       "md": 6,
       "lg": 4,
-      "xl": 3
+      "xl": 3,
+      "min": 100,
+      "max": 10000
     },
     "readAnswerTimeoutMs": {
       "type": "number",
@@ -154,7 +173,9 @@
       "sm": 12,
       "md": 6,
       "lg": 4,
-      "xl": 3
+      "xl": 3,
+      "min": 500,
+      "max": 30000
     },
     "commandTimeoutMs": {
       "type": "number",
@@ -165,7 +186,9 @@
       "sm": 12,
       "md": 6,
       "lg": 4,
-      "xl": 3
+      "xl": 3,
+      "min": 1000,
+      "max": 60000
     },
     "reconnectIntervalMs": {
       "type": "number",
@@ -176,7 +199,9 @@
       "sm": 12,
       "md": 6,
       "lg": 4,
-      "xl": 3
+      "xl": 3,
+      "min": 1000,
+      "max": 600000
     }
   }
 }
