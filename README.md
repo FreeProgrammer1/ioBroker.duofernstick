@@ -288,5 +288,6 @@ Older changelog entries are kept in [CHANGELOG_OLD.md](CHANGELOG_OLD.md).
 ## License
 
 MIT License
+This project is licensed under the terms of the [LICENSE](LICENSE) file.
 
 Copyright (c) 2026 FreeProgrammer1 <freeprogrammer1@mail.de>
