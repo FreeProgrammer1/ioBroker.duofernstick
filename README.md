@@ -289,4 +289,4 @@ Older changelog entries are kept in [CHANGELOG_OLD.md](CHANGELOG_OLD.md).
 
 MIT License
 
-Copyright (c) 2026 FreeProgrammer1
+Copyright (c) 2026 FreeProgrammer1 <freeprogrammer1@mail.de>
