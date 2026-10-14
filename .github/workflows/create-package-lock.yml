@@ -1,0 +1,35 @@
+# Erzeugt eine gültige package-lock.json und schreibt sie ins Repository.
+# Start: GitHub > Actions > "Create package-lock.json" > "Run workflow".
+# Nach dem erfolgreichen Lauf kann diese Datei wieder gelöscht werden.
+name: Create package-lock.json
+
+on:
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  create-lock:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24.x"
+
+      - name: Generate package-lock.json
+        run: npm install --package-lock-only --ignore-scripts --no-audit --no-fund
+
+      - name: Commit package-lock.json
+        run: |
+          if git diff --quiet --exit-code -- package-lock.json && git ls-files --error-unmatch package-lock.json >/dev/null 2>&1; then
+            echo "package-lock.json is already up to date."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -f package-lock.json
+          git commit -m "chore: add package-lock.json"
+          git push
