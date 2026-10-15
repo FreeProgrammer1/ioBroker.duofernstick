@@ -20,4 +20,4 @@ jobs:
     steps:
       - uses: iobroker-bot-orga/action-automerge-dependabot@v1
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
