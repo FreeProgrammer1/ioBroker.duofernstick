@@ -251,6 +251,12 @@ For diagnostics, the following information is useful:
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
+### 0.1.32 (2026-10-16)
+
+- (FreeProgrammer1) All object names are now available in all 11 ioBroker languages (new `lib/i18n.js`).
+- (FreeProgrammer1) Roles now match read/write access: `targetPosition` → `value.blind`, `targetLevel` → `value.dimmer`, running times → `level.timer`, writable weather station settings → `level`.
+- (FreeProgrammer1) Existing objects are corrected automatically on the next adapter start.
+
 ### 0.1.31 (2026-10-02)
 
 - (FreeProgrammer1) Received serial data is now processed strictly in order (no parallel frame handling).

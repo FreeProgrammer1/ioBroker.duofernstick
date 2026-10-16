@@ -26,6 +26,7 @@ function normalizeSerialPath(value) {
 }
 
 const protocol = require('./lib/protocol');
+const { localizeName } = require('./lib/i18n');
 
 // Obergrenze für wartende Statusabfragen. Bedienbefehle werden immer angenommen.
 const MAX_QUEUE_LENGTH = 50;
@@ -33,6 +34,51 @@ const MAX_QUEUE_LENGTH = 50;
 const DEFAULT_POLL_INTERVAL_MS = 300000;
 // Readings, die bei aktivierter Positionsumkehr invertiert werden (ioBroker-Konvention level.blind: 100 = offen).
 const INVERTIBLE_POSITION_READINGS = ['position', 'targetPosition'];
+
+// Rollen müssen zu common.write passen (ioBroker-Rollenkonvention: value.* = nur lesen, level.* = schreibbar).
+const WRITABLE_NUMBER_ROLE = {
+    'value.blind': 'level.blind',
+    'value.dimmer': 'level.dimmer',
+    'value.temperature': 'level.temperature',
+    'value.valve': 'level.valve',
+    'value.timer': 'level.timer',
+};
+const READONLY_NUMBER_ROLE = {
+    'level.blind': 'value.blind',
+    'level.dimmer': 'value.dimmer',
+    'level.temperature': 'value.temperature',
+    'level.valve': 'value.valve',
+    'level.timer': 'value.timer',
+};
+
+/**
+ * Vereinheitlicht common-Angaben vor dem Anlegen eines Objekts:
+ * Namen in allen Sprachen und Rollen passend zu read/write.
+ *
+ * @param {object} common common-Teil des Objekts
+ * @returns {object} korrigierte Kopie
+ */
+function normalizeCommon(common) {
+    const result = { ...common };
+    if (result.name !== undefined) {
+        result.name = localizeName(result.name);
+    }
+    const role = String(result.role || '');
+    if (result.type === 'number') {
+        if (result.write === true && (role === 'value' || role.startsWith('value.'))) {
+            result.role = WRITABLE_NUMBER_ROLE[role] || (result.unit === 's' ? 'level.timer' : 'level');
+        } else if (result.write === false && (role === 'level' || role.startsWith('level.'))) {
+            result.role = READONLY_NUMBER_ROLE[role] || 'value';
+        }
+    } else if (result.type === 'boolean') {
+        if (role === 'switch' && result.write === false) {
+            result.role = 'indicator';
+        } else if (role === 'button') {
+            result.read = false;
+        }
+    }
+    return result;
+}
 
 class Duofernstick extends utils.Adapter {
     constructor(options = {}) {
@@ -225,6 +271,7 @@ class Duofernstick extends utils.Adapter {
         if (this.ensuredObjects.has(id)) {
             return;
         }
+        common = normalizeCommon(common);
         try {
             const existing = await this.getObjectAsync(id).catch(() => null);
             if (existing) {
@@ -246,6 +293,7 @@ class Duofernstick extends utils.Adapter {
         if (this.ensuredObjects.has(id)) {
             return;
         }
+        common = normalizeCommon(common);
         try {
             const existing = await this.getObjectAsync(id).catch(() => null);
             if (existing) {
@@ -296,10 +344,10 @@ class Duofernstick extends utils.Adapter {
             slatPosition: { en: 'Slat position', de: 'Lamellenposition' }
         };
         const label = labels[name] || { en: name, de: name };
-        if (name === 'targetPosition') return { name: label, type: 'number', role: 'level.blind', read: true, write: false, min: 0, max: 100, unit: '%', def: 0 };
+        if (name === 'targetPosition') return { name: label, type: 'number', role: 'value.blind', read: true, write: false, min: 0, max: 100, unit: '%', def: 0 };
         if (name === 'position') return { name: label, type: 'number', role: 'level.blind', read: true, write: true, min: 0, max: 100, unit: '%', def: 0 };
         if (name === 'rawPosition') return { name: label, type: 'number', role: 'value', read: true, write: false, min: 0, max: 100, unit: '%', def: 0 };
-        if (name === 'targetLevel') return { name: label, type: 'number', role: 'level.dimmer', read: true, write: false, min: 0, max: 100, unit: '%', def: 0 };
+        if (name === 'targetLevel') return { name: label, type: 'number', role: 'value.dimmer', read: true, write: false, min: 0, max: 100, unit: '%', def: 0 };
         if (name === 'level') return { name: label, type: 'number', role: 'level.dimmer', read: true, write: true, min: 0, max: 100, unit: '%', def: 0 };
         if (name === 'state') return { name: label, type: 'boolean', role: 'switch', read: true, write: true, def: false };
         if (typeof value === 'boolean') return { name: label, type: 'boolean', role: 'switch', read: true, write: true, def: false };
@@ -1666,17 +1714,17 @@ class Duofernstick extends utils.Adapter {
         const numberDefs = {
             position: ['level.blind', 0, 100, '%'],
             rawPosition: ['value', 0, 100, '%'],
-            targetPosition: ['level.blind', 0, 100, '%'],
+            targetPosition: ['value.blind', 0, 100, '%'],
             level: ['level.dimmer', 0, 100, '%'],
-            targetLevel: ['level.dimmer', 0, 100, '%'],
+            targetLevel: ['value.dimmer', 0, 100, '%'],
             sunPosition: ['level.blind', 0, 100, '%'],
             ventilatingPosition: ['level.blind', 0, 100, '%'],
             intermediateValue: ['level', 0, 100, '%'],
             slatPosition: ['level', 0, 100, '%'],
             defaultSlatPos: ['level', 0, 100, '%'],
-            runningTime: ['value', 0, 255, 's'],
-            slatRunTime: ['value', 0, 50, 's'],
-            stairwellTime: ['value', 0, 3200, 's'],
+            runningTime: ['level.timer', 0, 255, 's'],
+            slatRunTime: ['level.timer', 0, 50, 's'],
+            stairwellTime: ['level.timer', 0, 3200, 's'],
             sendingInterval: ['value.interval', 1, 60, 'min'],
             'desired-temp': ['level.temperature', 4, 30, '°C'],
             desiredTemp: ['level.temperature', 4, 30, '°C'],
@@ -1735,9 +1783,9 @@ class Duofernstick extends utils.Adapter {
             stateText: { name: { en: 'State text', de: 'Status Text' }, type: 'string', role: 'text', read: true, write: false, def: '' },
             position: { name: { en: 'Position / set position', de: 'Position / Position setzen' }, type: 'number', role: 'level.blind', read: true, write: true, min: 0, max: 100, unit: '%', def: 0 },
             rawPosition: { name: { en: 'Raw DuoFern position', de: 'Rohposition DuoFern' }, type: 'number', role: 'value', read: true, write: false, min: 0, max: 100, unit: '%', def: 0 },
-            targetPosition: { name: { en: 'Target position', de: 'Zielposition' }, type: 'number', role: 'level.blind', read: true, write: false, min: 0, max: 100, unit: '%', def: 0 },
+            targetPosition: { name: { en: 'Target position', de: 'Zielposition' }, type: 'number', role: 'value.blind', read: true, write: false, min: 0, max: 100, unit: '%', def: 0 },
             level: { name: { en: 'Level / set level', de: 'Level / Level setzen' }, type: 'number', role: 'level.dimmer', read: true, write: true, min: 0, max: 100, unit: '%', def: 0 },
-            targetLevel: { name: { en: 'Target level', de: 'Ziel-Level' }, type: 'number', role: 'level.dimmer', read: true, write: false, min: 0, max: 100, unit: '%', def: 0 },
+            targetLevel: { name: { en: 'Target level', de: 'Ziel-Level' }, type: 'number', role: 'value.dimmer', read: true, write: false, min: 0, max: 100, unit: '%', def: 0 },
             state: { name: { en: 'State / switch', de: 'Zustand / Schalten' }, type: 'boolean', role: 'switch', read: true, write: true, def: false },
             moving: { name: { en: 'Moving', de: 'Bewegung' }, type: 'string', role: 'text', read: true, write: false, states: { up: 'up', down: 'down', stop: 'stop', moving: 'moving' }, def: 'stop' },
             up: { name: { en: 'Up', de: 'Hoch' }, type: 'boolean', role: 'button', read: false, write: true, def: false },
@@ -1754,7 +1802,7 @@ class Duofernstick extends utils.Adapter {
             ventilatingPosition: { name: { en: 'Ventilating position', de: 'Lüftungsposition' }, type: 'number', role: 'level.blind', read: true, write: true, min: 0, max: 100, unit: '%', def: 0 },
             ventilatingMode: { name: { en: 'Ventilating mode', de: 'Lüftungsmodus' }, type: 'boolean', role: 'switch', read: true, write: true, def: false },
             sunPosition: { name: { en: 'Sun position', de: 'Sonnenposition' }, type: 'number', role: 'level.blind', read: true, write: true, min: 0, max: 100, unit: '%', def: 0 },
-            runningTime: { name: { en: 'Running time', de: 'Laufzeit' }, type: 'number', role: 'value', read: true, write: true, min: 0, max: 150, unit: 's', def: 0 },
+            runningTime: { name: { en: 'Running time', de: 'Laufzeit' }, type: 'number', role: 'level.timer', read: true, write: true, min: 0, max: 150, unit: 's', def: 0 },
             intermediateMode: { name: { en: 'Intermediate mode', de: 'Zwischenwert-Modus' }, type: 'boolean', role: 'switch', read: true, write: true, def: false },
             intermediateValue: { name: { en: 'Intermediate value', de: 'Zwischenwert' }, type: 'number', role: 'level', read: true, write: true, min: 0, max: 100, unit: '%', def: 0 },
             slatPosition: { name: { en: 'Slat position', de: 'Lamellenposition' }, type: 'number', role: 'level', read: true, write: true, min: 0, max: 100, unit: '%', def: 0 }

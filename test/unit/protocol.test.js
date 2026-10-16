@@ -74,3 +74,29 @@ describe('lib/protocol', () => {
         assert.strictEqual(p.commandSupportedByDevice('4AABCD', 'level'), true);
     });
 });
+
+describe('lib/i18n', () => {
+    const { localizeName, lookup, LANGUAGES } = require('../../lib/i18n');
+
+    it('translates known names into all languages', () => {
+        const name = localizeName({ en: 'Target position', de: 'Zielposition' });
+        assert.deepStrictEqual(Object.keys(name), LANGUAGES);
+        assert.strictEqual(name.de, 'Zielposition');
+    });
+
+    it('translates technical identifiers and control states', () => {
+        assert.strictEqual(localizeName({ en: 'sunAutomatic', de: 'sunAutomatic' }).de, 'Sonnenautomatik');
+        assert.strictEqual(localizeName({ en: 'Control up', de: 'Steuerung up' }).de, 'Steuerung: Hoch');
+    });
+
+    it('returns proper names and unknown texts as plain string', () => {
+        assert.strictEqual(localizeName({ en: 'DuoFern 406B2D', de: 'DuoFern 406B2D' }), 'DuoFern 406B2D');
+        assert.strictEqual(localizeName('something new'), 'something new');
+    });
+
+    it('has a complete translation for every command and status reading', () => {
+        const p = require('../../lib/protocol');
+        const missing = Object.keys(p.commands).filter(key => !lookup(key));
+        assert.deepStrictEqual(missing, []);
+    });
+});

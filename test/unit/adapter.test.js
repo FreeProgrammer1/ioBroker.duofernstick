@@ -350,6 +350,48 @@ describe('main.js (simulated stick)', function () {
         assert.strictEqual(reply.message[0].value, '/dev/serial/by-id/usb-Rademacher_DuoFern_USB-Stick_WR0-if00-port0');
     });
 
+    it('creates objects with names in all languages and roles matching read/write', async () => {
+        // Je ein Gerät der wichtigsten Klassen anlegen: Rollladen, Rohrmotor-Aktor, Schaltaktor, Dimmer, Umweltsensor
+        adapter = await start({ deviceCodes: `${DEVICE},429147,43ABCD,48ABCD,69386B` });
+        for (const code of [DEVICE, '429147', '43ABCD', '48ABCD', '69386B']) {
+            FakeStick.last.receive(`0FFF0F21FF7F3F1F0F070315010000${code}FFFFFF01`);
+        }
+        await sleep(150);
+        await adapter.userSet(`devices.${DEVICE}.position`, 40);
+        await sleep(50);
+
+        const languages = ['en', 'de', 'ru', 'pt', 'nl', 'fr', 'it', 'es', 'pl', 'uk', 'zh-cn'];
+        const problems = [];
+        for (const [id, obj] of adapter.objects) {
+            const name = obj.common && obj.common.name;
+            if (name && typeof name === 'object') {
+                const missing = languages.filter(lang => typeof name[lang] !== 'string');
+                if (missing.length) {
+                    problems.push(`${id}: name misses ${missing.join(',')}`);
+                }
+            }
+            if (obj.type !== 'state') {
+                continue;
+            }
+            const { role = '', write, read, type } = obj.common;
+            if (type === 'number' && /^value(\.|$)/.test(role) && write !== false) {
+                problems.push(`${id}: role ${role} must be read-only`);
+            }
+            if (type === 'number' && /^level(\.|$)/.test(role) && write !== true) {
+                problems.push(`${id}: role ${role} must be writable`);
+            }
+            if (role === 'button' && (read !== false || write !== true)) {
+                problems.push(`${id}: button must be read:false/write:true`);
+            }
+            if (role === 'switch' && write !== true) {
+                problems.push(`${id}: switch must be writable`);
+            }
+        }
+        assert.deepStrictEqual(problems, []);
+        assert.strictEqual(adapter.objects.get(`duofernstick.0.devices.${DEVICE}.targetPosition`).common.role, 'value.blind');
+        assert.strictEqual(adapter.objects.get('duofernstick.0.info.connection').common.name.fr, 'Connexion');
+    });
+
     it('clears all timers on unload', async () => {
         adapter = await start({ statusAfterCommand: true, periodicStatusPoll: true });
         await adapter.userSet(`devices.${DEVICE}.up`, true);

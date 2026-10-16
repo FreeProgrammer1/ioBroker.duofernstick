@@ -1,7 +1,7 @@
 {
   "common": {
     "name": "duofernstick",
-    "version": "0.1.31",
+    "version": "0.1.32",
     "titleLang": {
       "en": "DuoFern Stick",
       "de": "DuoFern Stick",
@@ -71,6 +71,19 @@
       "link": "https://opensource.org/license/mit"
     },
     "news": {
+      "0.1.32": {
+        "en": "All object names are now available in all 11 languages; roles of target values, running times and configuration values now match their read/write access.",
+        "de": "Alle Objektnamen jetzt in allen 11 Sprachen; Rollen von Zielwerten, Laufzeiten und Konfigurationswerten passen jetzt zu Lese-/Schreibzugriff.",
+        "ru": "Все имена объектов теперь доступны на 11 языках; роли целевых значений, времени хода и параметров конфигурации соответствуют доступу на чтение/запись.",
+        "pt": "Todos os nomes de objetos estão agora disponíveis nos 11 idiomas; as funções dos valores-alvo, tempos de funcionamento e valores de configuração correspondem ao acesso de leitura/escrita.",
+        "nl": "Alle objectnamen zijn nu beschikbaar in alle 11 talen; rollen van doelwaarden, looptijden en configuratiewaarden passen nu bij lees-/schrijftoegang.",
+        "fr": "Tous les noms d’objets sont désormais disponibles dans les 11 langues ; les rôles des valeurs cibles, durées de course et valeurs de configuration correspondent à l’accès en lecture/écriture.",
+        "it": "Tutti i nomi degli oggetti sono ora disponibili in tutte le 11 lingue; i ruoli di valori target, tempi di corsa e valori di configurazione corrispondono all’accesso in lettura/scrittura.",
+        "es": "Todos los nombres de objetos están ahora disponibles en los 11 idiomas; los roles de valores objetivo, tiempos de recorrido y valores de configuración coinciden con el acceso de lectura/escritura.",
+        "pl": "Wszystkie nazwy obiektów są teraz dostępne w 11 językach; role wartości docelowych, czasów pracy i wartości konfiguracyjnych odpowiadają dostępowi do odczytu/zapisu.",
+        "uk": "Усі назви об’єктів тепер доступні 11 мовами; ролі цільових значень, часу ходу та параметрів конфігурації відповідають доступу на читання/запис.",
+        "zh-cn": "所有对象名称现已提供全部 11 种语言；目标值、运行时间和配置值的角色现在与读写权限一致。"
+      },
       "0.1.31": {
         "en": "Fixed parallel processing of received data, removed hard-coded stick code, much fewer object database writes, prioritised command queue without duplicates, optional position inversion, serial port selection in admin, standard tests.",
         "de": "Parallele Verarbeitung empfangener Daten behoben, fest eingebauten Stick-Code entfernt, deutlich weniger Objekt-Schreibzugriffe, priorisierte Befehlswarteschlange ohne Duplikate, optionale Positionsumkehr, Auswahl des seriellen Ports im Admin, Standard-Tests.",
@@ -142,7 +155,16 @@
         "role": "indicator.connected",
         "name": {
           "en": "Connection",
-          "de": "Verbindung"
+          "de": "Verbindung",
+          "ru": "Соединение",
+          "pt": "Ligação",
+          "nl": "Verbinding",
+          "fr": "Connexion",
+          "it": "Connessione",
+          "es": "Conexión",
+          "pl": "Połączenie",
+          "uk": "З'єднання",
+          "zh-cn": "连接"
         },
         "type": "boolean",
         "read": true,
@@ -158,7 +180,16 @@
         "role": "text",
         "name": {
           "en": "Configured radio code / DongleSerial",
-          "de": "Konfigurierter Funkcode / DongleSerial"
+          "de": "Konfigurierter Funkcode / DongleSerial",
+          "ru": "Настроенный радиокод / DongleSerial",
+          "pt": "Código de rádio configurado / DongleSerial",
+          "nl": "Ingestelde radiocode / DongleSerial",
+          "fr": "Code radio configuré / DongleSerial",
+          "it": "Codice radio configurato / DongleSerial",
+          "es": "Código de radio configurado / DongleSerial",
+          "pl": "Skonfigurowany kod radiowy / DongleSerial",
+          "uk": "Налаштований радіокод / DongleSerial",
+          "zh-cn": "已配置的无线代码 / DongleSerial"
         },
         "type": "string",
         "read": true,
@@ -174,7 +205,16 @@
         "role": "text",
         "name": {
           "en": "Last received raw telegram",
-          "de": "Letztes empfangenes Rohtelegramm"
+          "de": "Letztes empfangenes Rohtelegramm",
+          "ru": "Последняя принятая необработанная телеграмма",
+          "pt": "Último telegrama bruto recebido",
+          "nl": "Laatst ontvangen ruw telegram",
+          "fr": "Dernier télégramme brut reçu",
+          "it": "Ultimo telegramma grezzo ricevuto",
+          "es": "Último telegrama sin procesar recibido",
+          "pl": "Ostatni odebrany surowy telegram",
+          "uk": "Остання отримана сира телеграма",
+          "zh-cn": "最后接收的原始报文"
         },
         "type": "string",
         "read": true,
@@ -190,7 +230,16 @@
         "role": "text",
         "name": {
           "en": "Last transmitted raw telegram",
-          "de": "Letztes gesendetes Rohtelegramm"
+          "de": "Letztes gesendetes Rohtelegramm",
+          "ru": "Последняя отправленная необработанная телеграмма",
+          "pt": "Último telegrama bruto enviado",
+          "nl": "Laatst verzonden ruw telegram",
+          "fr": "Dernier télégramme brut envoyé",
+          "it": "Ultimo telegramma grezzo inviato",
+          "es": "Último telegrama sin procesar enviado",
+          "pl": "Ostatni wysłany surowy telegram",
+          "uk": "Остання надіслана сира телеграма",
+          "zh-cn": "最后发送的原始报文"
         },
         "type": "string",
         "read": true,
@@ -206,7 +255,16 @@
         "role": "text",
         "name": {
           "en": "Last error",
-          "de": "Letzter Fehler"
+          "de": "Letzter Fehler",
+          "ru": "Последняя ошибка",
+          "pt": "Último erro",
+          "nl": "Laatste fout",
+          "fr": "Dernière erreur",
+          "it": "Ultimo errore",
+          "es": "Último error",
+          "pl": "Ostatni błąd",
+          "uk": "Остання помилка",
+          "zh-cn": "最后错误"
         },
         "type": "string",
         "read": true,
@@ -222,7 +280,16 @@
         "role": "text",
         "name": {
           "en": "Adapter state",
-          "de": "Adapter-Status"
+          "de": "Adapter-Status",
+          "ru": "Состояние адаптера",
+          "pt": "Estado do adaptador",
+          "nl": "Adapterstatus",
+          "fr": "État de l’adaptateur",
+          "it": "Stato adattatore",
+          "es": "Estado del adaptador",
+          "pl": "Stan adaptera",
+          "uk": "Стан адаптера",
+          "zh-cn": "适配器状态"
         },
         "type": "string",
         "read": true,
@@ -238,7 +305,16 @@
         "role": "value",
         "name": {
           "en": "Pending commands",
-          "de": "Ausstehende Befehle"
+          "de": "Ausstehende Befehle",
+          "ru": "Ожидающие команды",
+          "pt": "Comandos pendentes",
+          "nl": "Wachtende opdrachten",
+          "fr": "Commandes en attente",
+          "it": "Comandi in attesa",
+          "es": "Comandos pendientes",
+          "pl": "Oczekujące polecenia",
+          "uk": "Команди в очікуванні",
+          "zh-cn": "待处理命令"
         },
         "type": "number",
         "read": true,
@@ -254,7 +330,16 @@
         "role": "indicator.working",
         "name": {
           "en": "Command active",
-          "de": "Befehl aktiv"
+          "de": "Befehl aktiv",
+          "ru": "Команда активна",
+          "pt": "Comando ativo",
+          "nl": "Opdracht actief",
+          "fr": "Commande active",
+          "it": "Comando attivo",
+          "es": "Comando activo",
+          "pl": "Polecenie aktywne",
+          "uk": "Команда активна",
+          "zh-cn": "命令执行中"
         },
         "type": "boolean",
         "read": true,
@@ -270,7 +355,16 @@
         "role": "text",
         "name": {
           "en": "Pairing mode",
-          "de": "Pairing-Modus"
+          "de": "Pairing-Modus",
+          "ru": "Режим сопряжения",
+          "pt": "Modo de emparelhamento",
+          "nl": "Koppelmodus",
+          "fr": "Mode d’appairage",
+          "it": "Modalità associazione",
+          "es": "Modo de emparejamiento",
+          "pl": "Tryb parowania",
+          "uk": "Режим сполучення",
+          "zh-cn": "配对模式"
         },
         "type": "string",
         "read": true,
@@ -286,7 +380,16 @@
         "role": "button",
         "name": {
           "en": "Start pairing for 60 seconds",
-          "de": "Pairing für 60 Sekunden starten"
+          "de": "Pairing für 60 Sekunden starten",
+          "ru": "Начать сопряжение на 60 секунд",
+          "pt": "Iniciar emparelhamento por 60 segundos",
+          "nl": "Koppelen 60 seconden starten",
+          "fr": "Démarrer l’appairage pendant 60 secondes",
+          "it": "Avvia associazione per 60 secondi",
+          "es": "Iniciar emparejamiento durante 60 segundos",
+          "pl": "Rozpocznij parowanie na 60 sekund",
+          "uk": "Почати сполучення на 60 секунд",
+          "zh-cn": "开始配对 60 秒"
         },
         "type": "boolean",
         "read": false,
@@ -302,7 +405,16 @@
         "role": "button",
         "name": {
           "en": "Start unpairing for 60 seconds",
-          "de": "Unpairing für 60 Sekunden starten"
+          "de": "Unpairing für 60 Sekunden starten",
+          "ru": "Начать отмену сопряжения на 60 секунд",
+          "pt": "Iniciar desemparelhamento por 60 segundos",
+          "nl": "Ontkoppelen 60 seconden starten",
+          "fr": "Démarrer le désappairage pendant 60 secondes",
+          "it": "Avvia dissociazione per 60 secondi",
+          "es": "Iniciar desemparejamiento durante 60 segundos",
+          "pl": "Rozpocznij usuwanie parowania na 60 sekund",
+          "uk": "Почати скасування сполучення на 60 секунд",
+          "zh-cn": "开始解除配对 60 秒"
         },
         "type": "boolean",
         "read": false,
@@ -318,7 +430,16 @@
         "role": "button",
         "name": {
           "en": "Status broadcast",
-          "de": "Status-Broadcast"
+          "de": "Status-Broadcast",
+          "ru": "Широковещательный запрос статуса",
+          "pt": "Difusão de estado",
+          "nl": "Status-broadcast",
+          "fr": "Diffusion d’état",
+          "it": "Broadcast di stato",
+          "es": "Difusión de estado",
+          "pl": "Rozgłoszenie statusu",
+          "uk": "Широкомовний запит статусу",
+          "zh-cn": "状态广播"
         },
         "type": "boolean",
         "read": false,
@@ -334,7 +455,16 @@
         "role": "button",
         "name": {
           "en": "Reopen serial port",
-          "de": "Seriellen Port neu öffnen"
+          "de": "Seriellen Port neu öffnen",
+          "ru": "Повторно открыть последовательный порт",
+          "pt": "Reabrir porta série",
+          "nl": "Seriële poort opnieuw openen",
+          "fr": "Rouvrir le port série",
+          "it": "Riapri porta seriale",
+          "es": "Reabrir puerto serie",
+          "pl": "Ponownie otwórz port szeregowy",
+          "uk": "Повторно відкрити послідовний порт",
+          "zh-cn": "重新打开串口"
         },
         "type": "boolean",
         "read": false,
@@ -350,7 +480,16 @@
         "role": "text",
         "name": {
           "en": "Send raw 44 digit hex telegram",
-          "de": "44-stelliges Hex-Rohtelegramm senden"
+          "de": "44-stelliges Hex-Rohtelegramm senden",
+          "ru": "Отправить 44-значную hex-телеграмму",
+          "pt": "Enviar telegrama hex de 44 dígitos",
+          "nl": "Ruw hex-telegram van 44 tekens verzenden",
+          "fr": "Envoyer un télégramme hex de 44 caractères",
+          "it": "Invia telegramma esadecimale da 44 cifre",
+          "es": "Enviar telegrama hex de 44 dígitos",
+          "pl": "Wyślij 44-znakowy telegram hex",
+          "uk": "Надіслати 44-значну hex-телеграму",
+          "zh-cn": "发送 44 位十六进制原始报文"
         },
         "type": "string",
         "read": true,
@@ -366,7 +505,16 @@
         "role": "text",
         "name": {
           "en": "Remote pair device code",
-          "de": "Remote-Pair Gerätecode"
+          "de": "Remote-Pair Gerätecode",
+          "ru": "Код устройства для удалённого сопряжения",
+          "pt": "Código de dispositivo para emparelhamento remoto",
+          "nl": "Apparaatcode voor koppelen op afstand",
+          "fr": "Code d’appareil pour appairage à distance",
+          "it": "Codice dispositivo per associazione remota",
+          "es": "Código de dispositivo para emparejamiento remoto",
+          "pl": "Kod urządzenia do zdalnego parowania",
+          "uk": "Код пристрою для віддаленого сполучення",
+          "zh-cn": "远程配对设备代码"
         },
         "type": "string",
         "read": true,
@@ -382,7 +530,16 @@
         "role": "json",
         "name": {
           "en": "Last parsed telegram",
-          "de": "Letztes geparstes Telegramm"
+          "de": "Letztes geparstes Telegramm",
+          "ru": "Последняя разобранная телеграмма",
+          "pt": "Último telegrama analisado",
+          "nl": "Laatst geparseerd telegram",
+          "fr": "Dernier télégramme analysé",
+          "it": "Ultimo telegramma analizzato",
+          "es": "Último telegrama analizado",
+          "pl": "Ostatni przeanalizowany telegram",
+          "uk": "Остання розібрана телеграма",
+          "zh-cn": "最后解析的报文"
         },
         "type": "string",
         "read": true,
@@ -398,7 +555,16 @@
         "role": "text",
         "name": {
           "en": "Last detected device code",
-          "de": "Letzter erkannter Gerätecode"
+          "de": "Letzter erkannter Gerätecode",
+          "ru": "Последний обнаруженный код устройства",
+          "pt": "Último código de dispositivo detetado",
+          "nl": "Laatst gedetecteerde apparaatcode",
+          "fr": "Dernier code d’appareil détecté",
+          "it": "Ultimo codice dispositivo rilevato",
+          "es": "Último código de dispositivo detectado",
+          "pl": "Ostatni wykryty kod urządzenia",
+          "uk": "Останній виявлений код пристрою",
+          "zh-cn": "最后检测到的设备代码"
         },
         "type": "string",
         "read": true,
@@ -414,7 +580,16 @@
         "role": "value",
         "name": {
           "en": "Known device count",
-          "de": "Anzahl bekannter Geräte"
+          "de": "Anzahl bekannter Geräte",
+          "ru": "Количество известных устройств",
+          "pt": "Número de dispositivos conhecidos",
+          "nl": "Aantal bekende apparaten",
+          "fr": "Nombre d’appareils connus",
+          "it": "Numero di dispositivi noti",
+          "es": "Número de dispositivos conocidos",
+          "pl": "Liczba znanych urządzeń",
+          "uk": "Кількість відомих пристроїв",
+          "zh-cn": "已知设备数量"
         },
         "type": "number",
         "read": true,
@@ -430,7 +605,16 @@
         "role": "value",
         "name": {
           "en": "Received telegrams without detected device code",
-          "de": "Empfangene Telegramme ohne erkannten Gerätecode"
+          "de": "Empfangene Telegramme ohne erkannten Gerätecode",
+          "ru": "Принятые телеграммы без кода устройства",
+          "pt": "Telegramas recebidos sem código de dispositivo",
+          "nl": "Ontvangen telegrammen zonder apparaatcode",
+          "fr": "Télégrammes reçus sans code d’appareil",
+          "it": "Telegrammi ricevuti senza codice dispositivo",
+          "es": "Telegramas recibidos sin código de dispositivo",
+          "pl": "Odebrane telegramy bez kodu urządzenia",
+          "uk": "Отримані телеграми без коду пристрою",
+          "zh-cn": "未识别设备代码的接收报文"
         },
         "type": "number",
         "read": true,
@@ -446,7 +630,16 @@
         "role": "text",
         "name": {
           "en": "Create device by code manually",
-          "de": "Gerät per Code manuell anlegen"
+          "de": "Gerät per Code manuell anlegen",
+          "ru": "Создать устройство по коду вручную",
+          "pt": "Criar dispositivo manualmente por código",
+          "nl": "Apparaat handmatig aanmaken via code",
+          "fr": "Créer un appareil manuellement par code",
+          "it": "Crea dispositivo manualmente tramite codice",
+          "es": "Crear dispositivo manualmente por código",
+          "pl": "Utwórz urządzenie ręcznie według kodu",
+          "uk": "Створити пристрій вручну за кодом",
+          "zh-cn": "按代码手动创建设备"
         },
         "type": "string",
         "read": true,
